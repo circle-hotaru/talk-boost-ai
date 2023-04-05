@@ -1,18 +1,42 @@
 import { useEffect, useState, KeyboardEventHandler } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import { sendRequest } from '~/apis/openai'
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from 'react-speech-recognition'
 
 const Content = () => {
   const [sendFlag, setSendFlag] = useState<boolean>(false)
   const [input, setInput] = useState<string>('')
   const [messages, setMessages] = useState<any[]>([])
   const [response, setResponse] = useState<string>('')
+  const [recordFlag, setRecordFlag] = useState<boolean>(false)
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition()
+
+  if (!browserSupportsSpeechRecognition) {
+    console.log("Browser doesn't support speech recognition.")
+  }
 
   const handleSend = () => {
     const input_json = { role: 'user', content: input }
     setMessages((prevMessages) => [...prevMessages, input_json])
     setInput('')
     setSendFlag(!sendFlag)
+  }
+
+  const handleRecord = () => {
+    if (!recordFlag) {
+      SpeechRecognition.startListening()
+    } else {
+      SpeechRecognition.stopListening()
+      setInput(transcript)
+    }
+    setRecordFlag(!recordFlag)
   }
 
   const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (event) => {
@@ -54,6 +78,14 @@ const Content = () => {
     }
   }, [sendFlag])
 
+  useEffect(() => {
+    if (!listening) {
+      SpeechRecognition.stopListening()
+      setInput(transcript)
+      setRecordFlag(!recordFlag)
+    }
+  }, [listening])
+
   return (
     <div className="w-full max-w-3xl flex flex-1 flex-col justify-end items-center mt-4">
       <div className="flex-1">
@@ -71,8 +103,14 @@ const Content = () => {
           minRows={1}
           maxRows={10}
           placeholder="Type your message here..."
-          className="grow px-3 py-2 bg-gray-100 rounded-lg resize-none"
+          className="grow px-3 py-2 bg-gray-100 rounded-lg resize-none text-neutral-500"
         />
+        <button
+          onClick={handleRecord}
+          className="border-2 font-bold py-2 px-4 rounded-lg"
+        >
+          {listening ? <span>🎙️</span> : <span>🛑</span>}
+        </button>
         <button
           onClick={handleSend}
           className="border-2 font-bold py-2 px-4 rounded-lg"
