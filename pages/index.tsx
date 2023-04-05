@@ -1,11 +1,10 @@
 import Head from 'next/head'
 import type { NextPage } from 'next'
 import Content from '~/components/Content'
-import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>TalkBoost</title>
         <meta
@@ -15,8 +14,8 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>Welcome to TalkBoost</h1>
+      <main className="min-h-screen p-4 flex flex-col items-center">
+        <h1 className="text-3xl font-bold text-center">Welcome to TalkBoost</h1>
         <Content />
       </main>
     </div>

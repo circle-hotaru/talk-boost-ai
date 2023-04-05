@@ -1,4 +1,5 @@
-import { useEffect, useState, KeyboardEvent } from 'react'
+import { useEffect, useState, KeyboardEventHandler } from 'react'
+import TextareaAutosize from 'react-textarea-autosize'
 import { sendRequest } from '~/apis/openai'
 
 const Content = () => {
@@ -14,7 +15,7 @@ const Content = () => {
     setSendFlag(!sendFlag)
   }
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (event) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault()
       if (input.length === 0) return
@@ -54,23 +55,30 @@ const Content = () => {
   }, [sendFlag])
 
   return (
-    <div>
-      <div>
+    <div className="w-full max-w-3xl flex flex-1 flex-col justify-end items-center mt-4">
+      <div className="flex-1">
         {messages
           .filter((message) => message.role !== 'system')
           .map(({ role, content }, index) => (
             <p key={index}>{`${role}: ${content}`}</p>
           ))}
       </div>
-      <div>
-        <input
-          type="text"
+      <div className="w-full flex items-center gap-2 mx-auto">
+        <TextareaAutosize
           value={input}
           onChange={(event) => setInput(event.target.value)}
           onKeyDown={handleKeyDown}
+          minRows={1}
+          maxRows={10}
+          placeholder="Type your message here..."
+          className="grow px-3 py-2 bg-gray-100 rounded-lg resize-none"
         />
-        &nbsp;
-        <button onClick={handleSend}>Send</button>
+        <button
+          onClick={handleSend}
+          className="border-2 font-bold py-2 px-4 rounded-lg"
+        >
+          Send
+        </button>
       </div>
     </div>
   )
