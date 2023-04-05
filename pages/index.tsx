@@ -1,15 +1,10 @@
 import Head from 'next/head'
-import { GetStaticProps } from 'next'
-import { Configuration, OpenAIApi } from 'openai'
-import styles from '../styles/Home.module.css'
+import type { NextPage } from 'next'
+import Content from '~/components/Content'
 
-interface HomeProps {
-  literal: string
-}
-
-const Home: React.FC<HomeProps> = ({ literal }) => {
+const Home: NextPage = () => {
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>TalkBoost</title>
         <meta
@@ -19,40 +14,12 @@ const Home: React.FC<HomeProps> = ({ literal }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>Welcome to TalkBoost</h1>
-        <p>{literal}</p>
+      <main className="min-h-screen p-4 flex flex-col items-center">
+        <h1 className="text-3xl font-bold text-center">Welcome to TalkBoost</h1>
+        <Content />
       </main>
     </div>
   )
 }
 
 export default Home
-
-export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  const incantation = 'how is going on'
-  const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-  })
-  const openai = new OpenAIApi(configuration)
-
-  try {
-    const completion = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: incantation }],
-    })
-    const result = completion.data.choices[0].message?.content
-    return {
-      props: {
-        literal: result ?? '~',
-      },
-    }
-  } catch (error) {
-    console.log(error)
-    return {
-      props: {
-        literal: 'something went wrong',
-      },
-    }
-  }
-}
