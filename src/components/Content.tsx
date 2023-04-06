@@ -26,7 +26,6 @@ const Content = () => {
   const handleSend = () => {
     const input_json = { role: 'user', content: input };
     setMessages((prevMessages) => [...prevMessages, input_json]);
-    console.log('11111input', input_json);
     setInput('');
     setSendFlag(!sendFlag);
   };
