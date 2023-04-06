@@ -15,6 +15,7 @@ specifiers:
   postcss-preset-env: ^8.3.0
   react: 18.2.0
   react-dom: 18.2.0
+  react-speech-kit: ^3.0.1
   react-speech-recognition: ^3.10.0
   react-textarea-autosize: ^8.4.1
   regenerator-runtime: ^0.13.11
@@ -30,6 +31,7 @@ dependencies:
   postcss-preset-env: 8.3.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-speech-kit: 3.0.1_react@18.2.0
   react-speech-recognition: 3.10.0_react@18.2.0
   react-textarea-autosize: 8.4.1_o2wclmlv6kymw75psj4clbbe6a
   regenerator-runtime: 0.13.11
@@ -2750,6 +2752,15 @@ packages:
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
     dev: true
+
+  /react-speech-kit/3.0.1_react@18.2.0:
+    resolution: {integrity: sha512-MXNOciISanhmnxpHJkBOev3M3NPDpW1T7nTc/eGw5pO9cXpoUccRxZkmr/IlpTPbPEneDNeTmbwri/YweyctZg==}
+    peerDependencies:
+      prop-types: ^15.7.2
+      react: ^16.8.0
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /react-speech-recognition/3.10.0_react@18.2.0:
     resolution: {integrity: sha512-EVSr4Ik8l9urwdPiK2r0+ADrLyDDrjB0qBRdUWO+w2MfwEBrj6NuRmy1GD3x7BU/V6/hab0pl8Lupen0zwlJyw==}
