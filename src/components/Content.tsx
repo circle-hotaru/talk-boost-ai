@@ -176,6 +176,12 @@ const Content = () => {
             <span>Send</span>
           )}
         </button>
+        <button
+          onClick={handleReturns}
+          className="border-2 font-bold py-2 px-4 rounded-lg"
+        >
+          Returns
+        </button>
       </div>
     </>
   )
