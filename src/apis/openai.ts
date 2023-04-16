@@ -2,6 +2,9 @@ import getConfig from 'next/config'
 const { publicRuntimeConfig } = getConfig()
 const { OPENAI_API_KEY } = publicRuntimeConfig
 
+const officalAPI = 'https://api.openai.com'
+const proxyAPI = 'https://chat-api.incircles.xyz'
+
 export const sendRequest = async (
   messages: string[],
   callback: (data: any) => void
@@ -18,7 +21,7 @@ export const sendRequest = async (
     }),
   }
 
-  fetch('https://api.openai.com/v1/chat/completions', requestOptions)
+  fetch(`${proxyAPI}/v1/chat/completions`, requestOptions)
     .then((response) => response.json())
     .then((data) => {
       callback(data)

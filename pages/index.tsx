@@ -14,8 +14,10 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="min-h-screen p-4 flex flex-col items-center">
-        <h1 className="text-3xl font-bold text-center">Welcome to TalkBoost</h1>
+      <main className="h-screen p-4 pb-8 flex flex-col items-center bg-gray-100">
+        <h1 className="text-3xl font-bold text-gray-900 text-center">
+          Welcome to TalkBoost
+        </h1>
         <Content />
       </main>
     </div>
