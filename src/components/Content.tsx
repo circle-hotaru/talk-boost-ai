@@ -16,7 +16,7 @@ const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
     <span
       className={
-        'self-end px-4 py-2 rounded-lg bg-blue-400 text-right font-normal text-slate-50'
+        'self-end px-3 py-2 rounded-lg bg-blue-400 text-right font-normal text-slate-50'
       }
     >
       {content}
@@ -28,7 +28,7 @@ const AIPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
     <span
       className={
-        'self-start px-4 py-2 rounded-lg bg-slate-50 text-left font-normal text-gray-900'
+        'self-start px-3 py-2 rounded-lg bg-slate-50 text-left font-normal text-gray-900'
       }
     >
       {content}
@@ -42,12 +42,8 @@ const Content = () => {
   const [messages, setMessages] = useState<any[]>([])
   const [response, setResponse] = useState<string>('')
   const [recordFlag, setRecordFlag] = useState<boolean>(false)
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition()
+  const { transcript, listening, browserSupportsSpeechRecognition } =
+    useSpeechRecognition()
   const { speak } = useSpeechSynthesis()
   if (!browserSupportsSpeechRecognition) {
     console.log("Browser doesn't support speech recognition.")
@@ -66,7 +62,7 @@ const Content = () => {
 
   const handleRecord = () => {
     if (!recordFlag) {
-      SpeechRecognition.startListening()
+      SpeechRecognition.startListening({ continuous: true })
     } else {
       SpeechRecognition.stopListening()
       setInput(transcript)
@@ -122,14 +118,6 @@ const Content = () => {
     }
   }, [sendFlag])
 
-  useEffect(() => {
-    if (!listening) {
-      SpeechRecognition.stopListening()
-      setInput(transcript)
-      setRecordFlag(!recordFlag)
-    }
-  }, [listening])
-
   useLayoutEffect(() => {
     setTimeout(() => {
       const dom = latestMessageRef.current
@@ -155,7 +143,7 @@ const Content = () => {
           -
         </div>
       </div>
-      <div className="w-full max-w-3xl flex flex-wrap items-center gap-2 mx-auto">
+      <div className="w-full max-w-3xl flex flex-wrap justify-end items-center gap-2 mx-auto">
         <TextareaAutosize
           value={input}
           onChange={(event) => setInput(event.target.value)}
@@ -163,7 +151,7 @@ const Content = () => {
           minRows={1}
           maxRows={10}
           placeholder="Type your message here"
-          className="flex-1 px-4 py-2 rounded-lg resize-none bg-gray-200 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
+          className="w-full flex-none md:flex-1 px-4 py-2 rounded-lg resize-none bg-gray-200 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
           onFocus={() => setAutoScroll(true)}
           onBlur={() => setAutoScroll(false)}
           autoFocus
@@ -180,12 +168,6 @@ const Content = () => {
         >
           <span>Send</span>
         </button>
-        {/* <button
-          onClick={handleReturns}
-          className="border-2 font-bold py-2 px-4 rounded-lg"
-        >
-          Returns
-        </button> */}
       </div>
     </>
   )
