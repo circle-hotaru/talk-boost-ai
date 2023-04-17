@@ -11,6 +11,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition'
 import { useSpeechSynthesis } from 'react-speech-kit'
+import { isIOS } from '~/utils'
 
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
@@ -133,7 +134,7 @@ const Content = () => {
   useLayoutEffect(() => {
     setTimeout(() => {
       const dom = latestMessageRef.current
-      if (dom && autoScroll) {
+      if (dom && !isIOS && autoScroll) {
         dom.scrollIntoView({ behavior: 'smooth', block: 'end' })
       }
     }, 500)
