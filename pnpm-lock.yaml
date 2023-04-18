@@ -15,6 +15,7 @@ specifiers:
   postcss-preset-env: ^8.3.0
   react: 18.2.0
   react-dom: 18.2.0
+  react-icons: ^4.8.0
   react-speech-kit: ^3.0.1
   react-speech-recognition: ^3.10.0
   react-textarea-autosize: ^8.4.1
@@ -31,6 +32,7 @@ dependencies:
   postcss-preset-env: 8.3.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-icons: 4.8.0_react@18.2.0
   react-speech-kit: 3.0.1_react@18.2.0
   react-speech-recognition: 3.10.0_react@18.2.0
   react-textarea-autosize: 8.4.1_o2wclmlv6kymw75psj4clbbe6a
@@ -2747,6 +2749,14 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-icons/4.8.0_react@18.2.0:
+    resolution: {integrity: sha512-N6+kOLcihDiAnj5Czu637waJqSnwlMNROzVZMhfX68V/9bu9qHaMIJC4UdozWoOk57gahFCNHwVvWzm0MTzRjg==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-is/16.13.1:
