@@ -12,6 +12,7 @@ import SpeechRecognition, {
 } from 'react-speech-recognition'
 import { useSpeechSynthesis } from 'react-speech-kit'
 import { isIOS } from '~/utils'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
@@ -38,7 +39,7 @@ const AIPanel: React.FC<{ content: string }> = ({ content }) => {
 }
 
 const Content = () => {
-  const [sendFlag, setSendFlag] = useState<boolean>(false)
+  const [sending, setSending] = useState<boolean>(false)
   const [input, setInput] = useState<string>('')
   const [messages, setMessages] = useState<any[]>([])
   const [response, setResponse] = useState<string>('')
@@ -58,7 +59,7 @@ const Content = () => {
     const input_json = { role: 'user', content: input }
     setMessages((prevMessages) => [...prevMessages, input_json])
     setInput('')
-    setSendFlag(!sendFlag)
+    setSending(true)
   }
 
   const handleRecord = () => {
@@ -97,11 +98,12 @@ const Content = () => {
       setTimeout(() => {
         speak({ text: response })
       }, 1000)
+      setSending(false)
     }
   }, [response])
 
   useEffect(() => {
-    if (messages.length > 0) {
+    if (sending && messages.length > 0) {
       let messagesToSent = messages
       messagesToSent.unshift({
         role: 'system',
@@ -117,12 +119,12 @@ const Content = () => {
         console.log(err)
       })
     }
-  }, [sendFlag])
+  }, [sending])
 
   useLayoutEffect(() => {
     setTimeout(() => {
       const dom = latestMessageRef.current
-      if (dom && !isIOS && autoScroll) {
+      if (dom && !isIOS() && autoScroll) {
         dom.scrollIntoView({ behavior: 'smooth', block: 'end' })
       }
     }, 500)
@@ -165,9 +167,14 @@ const Content = () => {
         </button>
         <button
           onClick={handleSend}
+          disabled={sending}
           className="px-4 py-2 rounded-lg bg-blue-600 font-bold text-white"
         >
-          <span>Send</span>
+          {sending ? (
+            <AiOutlineLoading3Quarters className="animate-spin w-6 h-6" />
+          ) : (
+            <span>Send</span>
+          )}
         </button>
       </div>
     </>

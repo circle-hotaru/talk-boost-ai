@@ -1,6 +1,8 @@
 import Head from 'next/head'
 import type { NextPage } from 'next'
-import Content from '~/components/Content'
+import dynamic from 'next/dynamic'
+const Content = dynamic(() => import('~/components/Content'), { ssr: false })
+import { FaGithub } from 'react-icons/fa'
 
 const Home: NextPage = () => {
   return (
@@ -18,7 +20,13 @@ const Home: NextPage = () => {
         <h1 className="text-3xl font-bold text-gray-900 text-center">
           Welcome to TalkBoost
         </h1>
+
         <Content />
+        <div className="absolute bottom-8 left-4 md:left-8">
+          <a href="https://github.com/circle-hotaru/talk-boost">
+            <FaGithub className="text-black w-6 h-6" />
+          </a>
+        </div>
       </main>
     </div>
   )
