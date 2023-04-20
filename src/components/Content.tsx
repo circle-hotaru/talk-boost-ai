@@ -11,7 +11,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition';
 import { useSpeechSynthesis } from 'react-speech-kit';
-
+import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts';
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
     <span
@@ -26,16 +26,59 @@ const UserPanel: React.FC<{ content: string }> = ({ content }) => {
 
 const AIPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
-    <span
-      className={
-        'self-start px-4 py-2 rounded-lg bg-slate-50 text-left font-normal text-gray-900'
-      }
-    >
-      {content}
+    <div className={'my-2'}>
+      <span
+        className={
+          'self-start px-4 py-2 rounded-lg bg-slate-50 text-left font-normal text-gray-900'
+        }
+      >
+        {content}
+      </span>
+      <TTSPanel content={content} />
+    </div>
+  );
+};
+const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
+  const [speak, setSpeak] = useState<Boolean>(true);
+  const [audioSource, setAudioSource] = useState(null);
+  const [voice, setVoiceList] = useState<any[]>([]);
+  const audioRef = useRef(null);
+  useEffect(() => {
+    if (speak && content) {
+      requestGetTTSApi(content, (data) => {
+        const blob = new Blob([data], { type: 'audio/mpeg' });
+        const audioURL = URL.createObjectURL(blob);
+        setAudioSource(audioURL);
+        audioRef.current.autoplay = true;
+        // audioRef.current.onplay();
+        setSpeak(false);
+      });
+    }
+  }, [speak]);
+
+  // 这个是语音样本
+  // useEffect(() => {
+  //   if (voice.length === 0) {
+  //     requestGetVoiceApi((data) => {
+  //       setVoiceList([...data.voices]);
+  //     });
+  //   }
+  // }, [voice]);
+
+  const handleSpeak = () => {
+    setSpeak(true);
+    // if (!speak) {
+    //   audioRef.current.pause();
+    //   audioRef.current.currentTime = 0;
+    // }
+  };
+  return (
+    <span>
+      {audioSource && <audio ref={audioRef} src={audioSource} />}
+      <button onClick={handleSpeak}>🎧</button>
     </span>
   );
 };
-
 const Content = () => {
   const [sendFlag, setSendFlag] = useState<boolean>(false);
   const [input, setInput] = useState<string>('');
@@ -48,7 +91,7 @@ const Content = () => {
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
-  const { speak } = useSpeechSynthesis();
+  // const { speak } = useSpeechSynthesis();
   if (!browserSupportsSpeechRecognition) {
     console.log("Browser doesn't support speech recognition.");
   }
@@ -84,22 +127,22 @@ const Content = () => {
       setInput(input + '\n');
     }
   };
-  const handleReturns = () => {
-    if (response) {
-      speak({ text: response });
-    } else {
-      speak({ text: 'Please start chatting with me' });
-    }
-  };
+  // const handleReturns = () => {
+  //   if (response) {
+  //     speak({ text: response });
+  //   } else {
+  //     speak({ text: 'Please start chatting with me' });
+  //   }
+  // };
   useEffect(() => {
     if (response.length !== 0 && response !== 'undefined') {
       setMessages((prevMessages) => [
         ...prevMessages,
         { role: 'assistant', content: response },
       ]);
-      setTimeout(() => {
-        speak({ text: response });
-      }, 1000);
+      // setTimeout(() => {
+      //   speak({ text: response });
+      // }, 1000);
     }
   }, [response]);
 
