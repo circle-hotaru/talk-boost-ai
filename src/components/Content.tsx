@@ -14,6 +14,7 @@ import { useSpeechSynthesis } from 'react-speech-kit'
 import { isIOS } from '~/utils'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
+
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
     <span
@@ -28,10 +29,10 @@ const UserPanel: React.FC<{ content: string }> = ({ content }) => {
 
 const AIPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
-    <div className={'my-2'}>
+    <div className="my-2">
       <span
         className={
-          'self-start px-4 py-2 rounded-lg bg-slate-50 text-left font-normal text-gray-900'
+          'self-start mr-1 px-4 py-2 rounded-lg bg-slate-50 text-left font-normal text-gray-900'
         }
       >
         {content}
@@ -46,6 +47,7 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
   const [audioSource, setAudioSource] = useState(null)
   const [voice, setVoiceList] = useState<any[]>([])
   const audioRef = useRef(null)
+
   useEffect(() => {
     if (speak && content) {
       requestGetTTSApi(content, (data) => {
@@ -128,22 +130,14 @@ const Content = () => {
       setInput(input + '\n')
     }
   }
-  // const handleReturns = () => {
-  //   if (response) {
-  //     speak({ text: response });
-  //   } else {
-  //     speak({ text: 'Please start chatting with me' });
-  //   }
-  // };
+
   useEffect(() => {
     if (response.length !== 0 && response !== 'undefined') {
       setMessages((prevMessages) => [
         ...prevMessages,
         { role: 'assistant', content: response },
       ])
-      // setTimeout(() => {
-      //   speak({ text: response });
-      // }, 1000);
+      setSending(false)
     }
   }, [response])
 
@@ -220,12 +214,6 @@ const Content = () => {
           ) : (
             <span>Send</span>
           )}
-        </button>
-        <button
-          onClick={handleReturns}
-          className="border-2 font-bold py-2 px-4 rounded-lg"
-        >
-          Returns
         </button>
       </div>
     </>
