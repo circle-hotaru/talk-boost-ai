@@ -98,8 +98,12 @@ const Content: React.FC = () => {
   const [messages, setMessages] = useState<any[]>([])
   const [response, setResponse] = useState<string>('')
   const [recordFlag, setRecordFlag] = useState<boolean>(false)
-  const { transcript, listening, browserSupportsSpeechRecognition } =
-    useSpeechRecognition()
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition()
   // const { speak } = useSpeechSynthesis()
 
   if (!browserSupportsSpeechRecognition) {
@@ -119,6 +123,7 @@ const Content: React.FC = () => {
 
   const handleRecord = () => {
     if (!recordFlag) {
+      resetTranscript()
       SpeechRecognition.startListening({ continuous: true })
     } else {
       SpeechRecognition.stopListening()
