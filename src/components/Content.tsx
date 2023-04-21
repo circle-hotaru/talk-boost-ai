@@ -49,17 +49,19 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
   const audioRef = useRef(null)
 
   useEffect(() => {
-    if (speak && content) {
-      requestGetTTSApi(content, (data) => {
-        const blob = new Blob([data], { type: 'audio/mpeg' })
-        const audioURL = URL.createObjectURL(blob)
-        setAudioSource(audioURL)
-        audioRef.current.autoplay = true
-        // audioRef.current.onplay();
-        setSpeak(false)
-      })
+    const genAudio = async () => {
+      if (speak && !!content) {
+        try {
+          const audioURL = await requestGetTTSApi(content)
+          setAudioSource(audioURL)
+          setSpeak(false)
+        } catch (error) {
+          console.error('error', error)
+        }
+      }
     }
-  }, [speak])
+    genAudio()
+  })
 
   // 这个是语音样本
   // useEffect(() => {
@@ -71,7 +73,8 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
   // }, [voice]);
 
   const handleSpeak = () => {
-    setSpeak(true)
+    audioRef.current.play()
+    // setSpeak(true)
     // if (!speak) {
     //   audioRef.current.pause();
     //   audioRef.current.currentTime = 0;
@@ -79,8 +82,12 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
   }
   return (
     <span>
-      {audioSource && <audio ref={audioRef} src={audioSource} />}
-      <button onClick={handleSpeak}>🎧</button>
+      {audioSource && (
+        <>
+          <audio autoPlay ref={audioRef} src={audioSource} />
+          <button onClick={handleSpeak}>🎧</button>
+        </>
+      )}
     </span>
   )
 }
