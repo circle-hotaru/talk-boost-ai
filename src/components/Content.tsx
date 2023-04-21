@@ -12,11 +12,14 @@ import SpeechRecognition, {
 } from 'react-speech-recognition';
 import { useSpeechSynthesis } from 'react-speech-kit';
 import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts';
+import { isIOS } from '~/utils'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
     <span
       className={
-        'self-end px-4 py-2 rounded-lg bg-blue-400 text-right font-normal text-slate-50'
+        'self-end px-3 py-2 rounded-lg bg-blue-400 text-right font-normal text-slate-50'
       }
     >
       {content}
@@ -26,35 +29,37 @@ const UserPanel: React.FC<{ content: string }> = ({ content }) => {
 
 const AIPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
-    <div className={'my-2'}>
+    <div className="my-2">
       <span
         className={
-          'self-start px-4 py-2 rounded-lg bg-slate-50 text-left font-normal text-gray-900'
+          'self-start mr-1 px-4 py-2 rounded-lg bg-slate-50 text-left font-normal text-gray-900'
         }
       >
         {content}
       </span>
       <TTSPanel content={content} />
     </div>
-  );
-};
+  )
+}
+
 const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
-  const [speak, setSpeak] = useState<Boolean>(true);
-  const [audioSource, setAudioSource] = useState(null);
-  const [voice, setVoiceList] = useState<any[]>([]);
-  const audioRef = useRef(null);
+  const [speak, setSpeak] = useState<Boolean>(true)
+  const [audioSource, setAudioSource] = useState(null)
+  const [voice, setVoiceList] = useState<any[]>([])
+  const audioRef = useRef(null)
+
   useEffect(() => {
     if (speak && content) {
       requestGetTTSApi(content, (data) => {
-        const blob = new Blob([data], { type: 'audio/mpeg' });
-        const audioURL = URL.createObjectURL(blob);
-        setAudioSource(audioURL);
-        audioRef.current.autoplay = true;
+        const blob = new Blob([data], { type: 'audio/mpeg' })
+        const audioURL = URL.createObjectURL(blob)
+        setAudioSource(audioURL)
+        audioRef.current.autoplay = true
         // audioRef.current.onplay();
-        setSpeak(false);
-      });
+        setSpeak(false)
+      })
     }
-  }, [speak]);
+  }, [speak])
 
   // 这个是语音样本
   // useEffect(() => {
@@ -64,6 +69,21 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
   //     });
   //   }
   // }, [voice]);
+
+  const handleSpeak = () => {
+    setSpeak(true)
+    // if (!speak) {
+    //   audioRef.current.pause();
+    //   audioRef.current.currentTime = 0;
+    // }
+  }
+  return (
+    <span>
+      {audioSource && <audio ref={audioRef} src={audioSource} />}
+      <button onClick={handleSpeak}>🎧</button>
+    </span>
+  )
+}
 
   const handleSpeak = () => {
     setSpeak(true);
@@ -80,18 +100,15 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
   );
 };
 const Content = () => {
-  const [sendFlag, setSendFlag] = useState<boolean>(false);
-  const [input, setInput] = useState<string>('');
-  const [messages, setMessages] = useState<any[]>([]);
-  const [response, setResponse] = useState<string>('');
-  const [recordFlag, setRecordFlag] = useState<boolean>(false);
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
-  // const { speak } = useSpeechSynthesis();
+  const [sending, setSending] = useState<boolean>(false)
+  const [input, setInput] = useState<string>('')
+  const [messages, setMessages] = useState<any[]>([])
+  const [response, setResponse] = useState<string>('')
+  const [recordFlag, setRecordFlag] = useState<boolean>(false)
+  const { transcript, listening, browserSupportsSpeechRecognition } =
+    useSpeechRecognition()
+  // const { speak } = useSpeechSynthesis()
+
   if (!browserSupportsSpeechRecognition) {
     console.log("Browser doesn't support speech recognition.");
   }
@@ -101,15 +118,15 @@ const Content = () => {
   const [autoScroll, setAutoScroll] = useState<boolean>(false);
 
   const handleSend = () => {
-    const input_json = { role: 'user', content: input };
-    setMessages((prevMessages) => [...prevMessages, input_json]);
-    setInput('');
-    setSendFlag(!sendFlag);
-  };
+    const input_json = { role: 'user', content: input }
+    setMessages((prevMessages) => [...prevMessages, input_json])
+    setInput('')
+    setSending(true)
+  }
 
   const handleRecord = () => {
     if (!recordFlag) {
-      SpeechRecognition.startListening();
+      SpeechRecognition.startListening({ continuous: true })
     } else {
       SpeechRecognition.stopListening();
       setInput(transcript);
@@ -126,29 +143,21 @@ const Content = () => {
       event.preventDefault();
       setInput(input + '\n');
     }
-  };
-  // const handleReturns = () => {
-  //   if (response) {
-  //     speak({ text: response });
-  //   } else {
-  //     speak({ text: 'Please start chatting with me' });
-  //   }
-  // };
+  }
+
   useEffect(() => {
     if (response.length !== 0 && response !== 'undefined') {
       setMessages((prevMessages) => [
         ...prevMessages,
         { role: 'assistant', content: response },
-      ]);
-      // setTimeout(() => {
-      //   speak({ text: response });
-      // }, 1000);
+      ])
+      setSending(false)
     }
   }, [response]);
 
   useEffect(() => {
-    if (messages.length > 0) {
-      let messagesToSent = messages;
+    if (sending && messages.length > 0) {
+      let messagesToSent = messages
       messagesToSent.unshift({
         role: 'system',
         content:
@@ -163,21 +172,13 @@ const Content = () => {
         console.log(err);
       });
     }
-  }, [sendFlag]);
-
-  useEffect(() => {
-    if (!listening) {
-      SpeechRecognition.stopListening();
-      setInput(transcript);
-      setRecordFlag(!recordFlag);
-    }
-  }, [listening]);
+  }, [sending])
 
   useLayoutEffect(() => {
     setTimeout(() => {
-      const dom = latestMessageRef.current;
-      if (dom && autoScroll) {
-        dom.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      const dom = latestMessageRef.current
+      if (dom && !isIOS() && autoScroll) {
+        dom.scrollIntoView({ behavior: 'smooth', block: 'end' })
       }
     }, 500);
   });
@@ -198,7 +199,7 @@ const Content = () => {
           -
         </div>
       </div>
-      <div className="w-full max-w-3xl flex flex-wrap items-center gap-2 mx-auto">
+      <div className="w-full max-w-3xl flex flex-wrap justify-end items-center gap-2 mx-auto">
         <TextareaAutosize
           value={input}
           onChange={(event) => setInput(event.target.value)}
@@ -206,7 +207,7 @@ const Content = () => {
           minRows={1}
           maxRows={10}
           placeholder="Type your message here"
-          className="flex-1 px-4 py-2 rounded-lg resize-none bg-gray-200 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
+          className="w-full flex-none md:flex-1 px-4 py-2 rounded-lg resize-none bg-gray-200 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
           onFocus={() => setAutoScroll(true)}
           onBlur={() => setAutoScroll(false)}
           autoFocus
@@ -219,16 +220,15 @@ const Content = () => {
         </button>
         <button
           onClick={handleSend}
+          disabled={sending}
           className="px-4 py-2 rounded-lg bg-blue-600 font-bold text-white"
         >
-          <span>Send</span>
+          {sending ? (
+            <AiOutlineLoading3Quarters className="animate-spin w-6 h-6" />
+          ) : (
+            <span>Send</span>
+          )}
         </button>
-        {/* <button
-          onClick={handleReturns}
-          className="border-2 font-bold py-2 px-4 rounded-lg"
-        >
-          Returns
-        </button> */}
       </div>
     </>
   );
