@@ -1,24 +1,26 @@
-const ttsBaseUrl = 'https://api.elevenlabs.io';
+import getConfig from 'next/config'
+const { publicRuntimeConfig } = getConfig()
+const { TSS_API_KEY } = publicRuntimeConfig
 
-const getTTSApi = '/v1/voices';
-const apiKey = '7c17fca867933ce98487ecd02adba18b';
+const ttsBaseUrl = 'https://api.elevenlabs.io'
+
 export const requestGetVoiceApi = (callback) => {
   const requestOptions = {
     method: 'GET',
     headers: {
       'content-type': 'application/json',
-      'xi-api-key': apiKey,
+      'xi-api-key': TSS_API_KEY,
     },
-  };
+  }
   fetch(`${ttsBaseUrl}/v1/voices`, requestOptions)
     .then((response) => response.json())
     .then((data) => {
-      callback(data);
+      callback(data)
     })
     .catch((err) => {
-      return err;
-    });
-};
+      return err
+    })
+}
 
 export const requestGetTTSApi = (message, callback) => {
   const requestOptions = {
@@ -26,7 +28,7 @@ export const requestGetTTSApi = (message, callback) => {
     headers: {
       accept: 'audio/mpeg',
       'content-type': 'application/json',
-      'xi-api-key': apiKey,
+      'xi-api-key': TSS_API_KEY,
     },
     body: JSON.stringify({
       text: message,
@@ -35,14 +37,14 @@ export const requestGetTTSApi = (message, callback) => {
         similarity_boost: 0,
       },
     }),
-  };
-  const voice_id = '21m00Tcm4TlvDq8ikWAM';
+  }
+  const voice_id = '21m00Tcm4TlvDq8ikWAM'
   fetch(`${ttsBaseUrl}/v1/text-to-speech/${voice_id}`, requestOptions)
     .then((response) => response.arrayBuffer())
     .then((data) => {
-      callback(data);
+      callback(data)
     })
     .catch((err) => {
-      return err;
-    });
-};
+      return err
+    })
+}

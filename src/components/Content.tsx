@@ -29,7 +29,7 @@ const UserPanel: React.FC<{ content: string }> = ({ content }) => {
 
 const AIPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
-    <div className="my-2">
+    <div className="flex flex-nowrap gap-1 items-center">
       <span
         className={
           'self-start mr-1 px-4 py-2 rounded-lg bg-slate-50 text-left font-normal text-gray-900'
@@ -85,7 +85,7 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
   )
 }
 
-const Content = () => {
+const Content: React.FC = () => {
   const [sending, setSending] = useState<boolean>(false)
   const [input, setInput] = useState<string>('')
   const [messages, setMessages] = useState<any[]>([])
