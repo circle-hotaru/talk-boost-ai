@@ -43,18 +43,16 @@ const AIPanel: React.FC<{ content: string }> = ({ content }) => {
 }
 
 const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
-  const [speak, setSpeak] = useState<Boolean>(true)
   const [audioSource, setAudioSource] = useState(null)
   const [voice, setVoiceList] = useState<any[]>([])
   const audioRef = useRef(null)
 
   useEffect(() => {
     const genAudio = async () => {
-      if (speak && !!content) {
+      if (!!content) {
         try {
           const audioURL = await requestGetTTSApi(content)
           setAudioSource(audioURL)
-          setSpeak(false)
         } catch (error) {
           console.error('error', error)
         }
@@ -62,6 +60,12 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
     }
     genAudio()
   })
+
+  useEffect(() => {
+    if (!!audioSource) {
+      audioRef.current.play()
+    }
+  }, [audioSource])
 
   // 这个是语音样本
   // useEffect(() => {
@@ -84,7 +88,7 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
     <span>
       {audioSource && (
         <>
-          <audio autoPlay ref={audioRef} src={audioSource} />
+          <audio ref={audioRef} src={audioSource} />
           <button onClick={handleSpeak}>🎧</button>
         </>
       )}
