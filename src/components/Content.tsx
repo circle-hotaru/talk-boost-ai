@@ -11,9 +11,9 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition'
 import { useSpeechSynthesis } from 'react-speech-kit'
+import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
 import { isIOS } from '~/utils'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
 
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
@@ -191,7 +191,7 @@ const Content: React.FC = () => {
               <UserPanel key={index} content={content} />
             ) : (
               <AIPanel key={index} content={content} />
-            )
+            ),
           )}
         <div ref={latestMessageRef} className="opacity-0 h-0.5">
           -
