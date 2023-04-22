@@ -2,7 +2,7 @@ import getConfig from 'next/config'
 const { publicRuntimeConfig } = getConfig()
 const { TSS_API_KEY } = publicRuntimeConfig
 
-const ttsBaseUrl = 'https://api.elevenlabs.io'
+const ttsBaseUrl = 'https://elevenlabs-api.incircles.xyz'
 
 export const requestGetVoiceApi = (callback) => {
   const requestOptions = {
@@ -22,7 +22,8 @@ export const requestGetVoiceApi = (callback) => {
     })
 }
 
-export const requestGetTTSApi = (message, callback) => {
+export const requestGetTTSApi = async (message) => {
+  const voice_id = '21m00Tcm4TlvDq8ikWAM'
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -38,13 +39,18 @@ export const requestGetTTSApi = (message, callback) => {
       },
     }),
   }
-  const voice_id = '21m00Tcm4TlvDq8ikWAM'
-  fetch(`${ttsBaseUrl}/v1/text-to-speech/${voice_id}`, requestOptions)
-    .then((response) => response.arrayBuffer())
-    .then((data) => {
-      callback(data)
-    })
-    .catch((err) => {
-      return err
-    })
+  try {
+    const response = await fetch(
+      `${ttsBaseUrl}/v1/text-to-speech/${voice_id}`,
+      requestOptions
+    )
+    if (!response.ok) {
+      throw new Error('something went wrong')
+    }
+    const blob = await response.blob()
+    return URL.createObjectURL(blob)
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
 }
