@@ -6,7 +6,6 @@ import {
   useLayoutEffect,
 } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
-import { sendRequest } from '~/apis/openai'
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition'
@@ -47,21 +46,32 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
   const [voice, setVoiceList] = useState<any[]>([])
   const audioRef = useRef(null)
 
-  useEffect(() => {
-    const genAudio = async () => {
-      console.log('~~~run genAudio~~~')
+  const handleGenAudio = async (message) => {
+    if (!content) return
+    try {
+      const response = await fetch('/api/elevenlabsai', {
+        method: 'POST',
+        headers: {
+          accept: 'audio/mpeg',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message,
+        }),
+      })
+      const blob = await response.blob()
+      const audioURL = URL.createObjectURL(blob)
 
-      if (!!content) {
-        try {
-          const audioURL = await requestGetTTSApi(content)
-          console.log('~~~audioURL~~~', audioURL)
-          setAudioSource(audioURL)
-        } catch (error) {
-          console.error('error', error)
-        }
+      if (audioURL) {
+        setAudioSource(audioURL)
       }
+    } catch (error) {
+      console.error(error)
     }
-    genAudio()
+  }
+
+  useEffect(() => {
+    handleGenAudio(content)
   }, [])
 
   useEffect(() => {
@@ -150,6 +160,26 @@ const Content: React.FC = () => {
     }
   }
 
+  const handleGenAIResponse = async (messages) => {
+    try {
+      const response = await fetch('/api/openai', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages,
+        }),
+      })
+      const data = await response.json()
+      if (data) {
+        setResponse(data.choices[0].message.content)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   useEffect(() => {
     if (response.length !== 0 && response !== 'undefined') {
       setMessages((prevMessages) => [
@@ -168,14 +198,7 @@ const Content: React.FC = () => {
         content:
           'You are an English teacher, please help me practice daily English communication. If I make any mistakes, please point them out and correct them.',
       })
-      sendRequest(messagesToSent, (data: any) => {
-        if (data) {
-          setResponse(data.choices[0].message.content)
-          console.log('Response: ' + data.choices[0].message.content)
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
+      handleGenAIResponse(messagesToSent)
     }
   }, [sending])
 
