@@ -14,7 +14,6 @@ import { useSpeechSynthesis } from 'react-speech-kit'
 import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
 import { isIOS } from '~/utils'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
 
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
