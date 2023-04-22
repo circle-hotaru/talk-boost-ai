@@ -4,16 +4,17 @@ import {
   KeyboardEventHandler,
   useRef,
   useLayoutEffect,
-} from 'react';
-import TextareaAutosize from 'react-textarea-autosize';
-import { sendRequest } from '~/apis/openai';
+} from 'react'
+import TextareaAutosize from 'react-textarea-autosize'
+import { sendRequest } from '~/apis/openai'
 import SpeechRecognition, {
   useSpeechRecognition,
-} from 'react-speech-recognition';
-import { useSpeechSynthesis } from 'react-speech-kit';
-import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts';
+} from 'react-speech-recognition'
+import { useSpeechSynthesis } from 'react-speech-kit'
+import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
 import { isIOS } from '~/utils'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
 
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
@@ -24,12 +25,12 @@ const UserPanel: React.FC<{ content: string }> = ({ content }) => {
     >
       {content}
     </span>
-  );
-};
+  )
+}
 
 const AIPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
-    <div className="my-2">
+    <div className="flex flex-nowrap gap-1 items-center">
       <span
         className={
           'self-start mr-1 px-4 py-2 rounded-lg bg-slate-50 text-left font-normal text-gray-900'
@@ -85,21 +86,7 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
   )
 }
 
-  const handleSpeak = () => {
-    setSpeak(true);
-    // if (!speak) {
-    //   audioRef.current.pause();
-    //   audioRef.current.currentTime = 0;
-    // }
-  };
-  return (
-    <span>
-      {audioSource && <audio ref={audioRef} src={audioSource} />}
-      <button onClick={handleSpeak}>🎧</button>
-    </span>
-  );
-};
-const Content = () => {
+const Content: React.FC = () => {
   const [sending, setSending] = useState<boolean>(false)
   const [input, setInput] = useState<string>('')
   const [messages, setMessages] = useState<any[]>([])
@@ -110,12 +97,12 @@ const Content = () => {
   // const { speak } = useSpeechSynthesis()
 
   if (!browserSupportsSpeechRecognition) {
-    console.log("Browser doesn't support speech recognition.");
+    console.log("Browser doesn't support speech recognition.")
   }
 
   // auto scroll
-  const latestMessageRef = useRef<HTMLDivElement>(null);
-  const [autoScroll, setAutoScroll] = useState<boolean>(false);
+  const latestMessageRef = useRef<HTMLDivElement>(null)
+  const [autoScroll, setAutoScroll] = useState<boolean>(false)
 
   const handleSend = () => {
     const input_json = { role: 'user', content: input }
@@ -128,20 +115,20 @@ const Content = () => {
     if (!recordFlag) {
       SpeechRecognition.startListening({ continuous: true })
     } else {
-      SpeechRecognition.stopListening();
-      setInput(transcript);
+      SpeechRecognition.stopListening()
+      setInput(transcript)
     }
-    setRecordFlag(!recordFlag);
-  };
+    setRecordFlag(!recordFlag)
+  }
 
   const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (event) => {
     if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
-      if (input.length === 0) return;
-      handleSend();
+      event.preventDefault()
+      if (input.length === 0) return
+      handleSend()
     } else if (event.key === 'Enter' && event.shiftKey) {
-      event.preventDefault();
-      setInput(input + '\n');
+      event.preventDefault()
+      setInput(input + '\n')
     }
   }
 
@@ -153,7 +140,7 @@ const Content = () => {
       ])
       setSending(false)
     }
-  }, [response]);
+  }, [response])
 
   useEffect(() => {
     if (sending && messages.length > 0) {
@@ -162,15 +149,15 @@ const Content = () => {
         role: 'system',
         content:
           'You are an English teacher, please help me practice daily English communication. If I make any mistakes, please point them out and correct them.',
-      });
+      })
       sendRequest(messagesToSent, (data: any) => {
         if (data) {
-          setResponse(data.choices[0].message.content);
-          console.log('Response: ' + data.choices[0].message.content);
+          setResponse(data.choices[0].message.content)
+          console.log('Response: ' + data.choices[0].message.content)
         }
       }).catch((err) => {
-        console.log(err);
-      });
+        console.log(err)
+      })
     }
   }, [sending])
 
@@ -180,8 +167,8 @@ const Content = () => {
       if (dom && !isIOS() && autoScroll) {
         dom.scrollIntoView({ behavior: 'smooth', block: 'end' })
       }
-    }, 500);
-  });
+    }, 500)
+  })
 
   return (
     <>
@@ -231,7 +218,7 @@ const Content = () => {
         </button>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Content;
+export default Content
