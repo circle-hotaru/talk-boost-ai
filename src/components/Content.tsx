@@ -49,9 +49,12 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
 
   useEffect(() => {
     const genAudio = async () => {
+      console.log('~~~run genAudio~~~')
+
       if (!!content) {
         try {
           const audioURL = await requestGetTTSApi(content)
+          console.log('~~~audioURL~~~', audioURL)
           setAudioSource(audioURL)
         } catch (error) {
           console.error('error', error)
@@ -59,7 +62,7 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
       }
     }
     genAudio()
-  })
+  }, [])
 
   useEffect(() => {
     if (!!audioSource) {
