@@ -10,7 +10,6 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition'
 import { useSpeechSynthesis } from 'react-speech-kit'
-import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
 import { isIOS } from '~/utils'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
@@ -26,7 +25,10 @@ const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   )
 }
 
-const AIPanel: React.FC<{ content: string }> = ({ content }) => {
+const AIPanel: React.FC<{ content: string; sending: boolean }> = ({
+  content,
+  sending,
+}) => {
   return (
     <div className="flex flex-nowrap gap-1 items-center">
       <span
@@ -36,12 +38,15 @@ const AIPanel: React.FC<{ content: string }> = ({ content }) => {
       >
         {content}
       </span>
-      <TTSPanel content={content} />
+      <TTSPanel content={content} sending={sending} />
     </div>
   )
 }
 
-const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
+const TTSPanel: React.FC<{ content: string; sending: boolean }> = ({
+  content,
+  sending,
+}) => {
   const [audioSource, setAudioSource] = useState(null)
   const [voice, setVoiceList] = useState<any[]>([])
   const audioRef = useRef(null)
@@ -70,6 +75,15 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
     }
   }
 
+  const handleSpeak = () => {
+    audioRef.current.play()
+    // setSpeak(true)
+    // if (!speak) {
+    //   audioRef.current.pause();
+    //   audioRef.current.currentTime = 0;
+    // }
+  }
+
   useEffect(() => {
     handleGenAudio(content)
   }, [])
@@ -89,14 +103,12 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
   //   }
   // }, [voice]);
 
-  const handleSpeak = () => {
-    audioRef.current.play()
-    // setSpeak(true)
-    // if (!speak) {
-    //   audioRef.current.pause();
-    //   audioRef.current.currentTime = 0;
-    // }
-  }
+  useEffect(() => {
+    if (!!audioSource && sending) {
+      audioRef.current.pause()
+    }
+  }, [sending])
+
   return (
     <span>
       {audioSource && (
@@ -220,8 +232,8 @@ const Content: React.FC = () => {
             role === 'user' ? (
               <UserPanel key={index} content={content} />
             ) : (
-              <AIPanel key={index} content={content} />
-            ),
+              <AIPanel key={index} content={content} sending={sending} />
+            )
           )}
         <div ref={latestMessageRef} className="opacity-0 h-0.5">
           -
