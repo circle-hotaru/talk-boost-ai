@@ -9,9 +9,8 @@ import TextareaAutosize from 'react-textarea-autosize'
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition'
-import { useSpeechSynthesis } from 'react-speech-kit'
 import { requestOpenAI } from '~/apis/openai'
-import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
+import { requestGetTTSApi } from '~/apis/tts'
 import { isIOS } from '~/utils'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
@@ -40,7 +39,7 @@ const AIPanel: React.FC<{ content: string; sending: boolean }> = ({
       >
         {content}
       </span>
-      <TTSPanel content={content} sending={sending} />
+      {/* <TTSPanel content={content} sending={sending} /> */}
     </div>
   )
 }
