@@ -1,15 +1,12 @@
-import getConfig from 'next/config'
-const { publicRuntimeConfig } = getConfig()
-const { TSS_API_KEY } = publicRuntimeConfig
-
 const ttsBaseUrl = 'https://elevenlabs-api.incircles.xyz'
+const voice_id = '21m00Tcm4TlvDq8ikWAM'
 
+// @notice: xi-api-key had been add to cloudflare worker
 export const requestGetVoiceApi = (callback) => {
   const requestOptions = {
     method: 'GET',
     headers: {
       'content-type': 'application/json',
-      'xi-api-key': TSS_API_KEY,
     },
   }
   fetch(`${ttsBaseUrl}/v1/voices`, requestOptions)
@@ -23,13 +20,11 @@ export const requestGetVoiceApi = (callback) => {
 }
 
 export const requestGetTTSApi = async (message) => {
-  const voice_id = '21m00Tcm4TlvDq8ikWAM'
   const requestOptions = {
     method: 'POST',
     headers: {
       accept: 'audio/mpeg',
       'content-type': 'application/json',
-      'xi-api-key': TSS_API_KEY,
     },
     body: JSON.stringify({
       text: message,

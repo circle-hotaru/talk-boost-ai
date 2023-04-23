@@ -6,14 +6,14 @@ import {
   useLayoutEffect,
 } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
-import { sendRequest } from '~/apis/openai'
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition'
 import { useSpeechSynthesis } from 'react-speech-kit'
+import { requestOpenAI } from '~/apis/openai'
+import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
 import { isIOS } from '~/utils'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
 import { Switch } from '@headlessui/react'
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
@@ -27,10 +27,11 @@ const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   )
 }
 
-const AIPanel: React.FC<{ content: string; enabled: boolean }> = ({
-  content,
-  enabled,
-}) => {
+const AIPanel: React.FC<{
+  content: string
+  enabled: boolean
+  sending: boolean
+}> = ({ content, enabled, sending }) => {
   return (
     <div className="flex flex-nowrap gap-1 items-center">
       <span
@@ -40,31 +41,47 @@ const AIPanel: React.FC<{ content: string; enabled: boolean }> = ({
       >
         {content}
       </span>
-      {enabled && <TTSPanel content={content} />}
+      {enabled && <TTSPanel content={content} sending={sending} />}
     </div>
   )
 }
 
-const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
-  const [speak, setSpeak] = useState<Boolean>(true)
+const TTSPanel: React.FC<{ content: string; sending: boolean }> = ({
+  content,
+  sending,
+}) => {
   const [audioSource, setAudioSource] = useState(null)
   const [voice, setVoiceList] = useState<any[]>([])
   const audioRef = useRef(null)
 
+  const handleSpeak = () => {
+    audioRef.current.play()
+    // setSpeak(true)
+    // if (!speak) {
+    //   audioRef.current.pause();
+    //   audioRef.current.currentTime = 0;
+    // }
+  }
+
   useEffect(() => {
     const genAudio = async () => {
-      if (speak && !!content) {
+      if (!!content) {
         try {
           const audioURL = await requestGetTTSApi(content)
           setAudioSource(audioURL)
-          setSpeak(false)
         } catch (error) {
           console.error('error', error)
         }
       }
     }
     genAudio()
-  })
+  }, [])
+
+  useEffect(() => {
+    if (!!audioSource) {
+      audioRef.current.play()
+    }
+  }, [audioSource])
 
   // 这个是语音样本
   // useEffect(() => {
@@ -75,19 +92,17 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
   //   }
   // }, [voice]);
 
-  const handleSpeak = () => {
-    audioRef.current.play()
-    // setSpeak(true)
-    // if (!speak) {
-    //   audioRef.current.pause();
-    //   audioRef.current.currentTime = 0;
-    // }
-  }
+  useEffect(() => {
+    if (!!audioSource && sending) {
+      audioRef.current.pause()
+    }
+  }, [sending])
+
   return (
     <span>
       {audioSource && (
         <>
-          <audio autoPlay ref={audioRef} src={audioSource} />
+          <audio ref={audioRef} src={audioSource} />
           <button onClick={handleSpeak}>🎧</button>
         </>
       )}
@@ -147,6 +162,17 @@ const Content: React.FC = () => {
     }
   }
 
+  const handleGenAIResponse = async (messages) => {
+    try {
+      const data = await requestOpenAI(messages)
+      if (data) {
+        setResponse(data.choices[0].message.content)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   useEffect(() => {
     if (response.length !== 0 && response !== 'undefined') {
       setMessages((prevMessages) => [
@@ -165,14 +191,7 @@ const Content: React.FC = () => {
         content:
           'You are an English teacher, please help me practice daily English communication. If I make any mistakes, please point them out and correct them.',
       })
-      sendRequest(messagesToSent, (data: any) => {
-        if (data) {
-          setResponse(data.choices[0].message.content)
-          console.log('Response: ' + data.choices[0].message.content)
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
+      handleGenAIResponse(messagesToSent)
     }
   }, [sending])
 
@@ -210,7 +229,12 @@ const Content: React.FC = () => {
             role === 'user' ? (
               <UserPanel key={index} content={content} />
             ) : (
-              <AIPanel key={index} content={content} enabled={enabled} />
+              <AIPanel
+                key={index}
+                content={content}
+                sending={sending}
+                enabled={enabled}
+              />
             ),
           )}
         <div ref={latestMessageRef} className="opacity-0 h-0.5">
