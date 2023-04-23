@@ -3,6 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 const proxyAPI = 'https://elevenlabs-api.incircles.xyz'
 const voice_id = '21m00Tcm4TlvDq8ikWAM'
 
+// @notice: deploy on vercel will return 504 timeout when you are a hobby user.
+// Serverless Function Execution Timeout (Seconds) is 10
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

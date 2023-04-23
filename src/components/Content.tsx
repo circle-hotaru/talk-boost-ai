@@ -10,6 +10,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition'
 import { useSpeechSynthesis } from 'react-speech-kit'
+import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
 import { isIOS } from '~/utils'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
@@ -51,29 +52,29 @@ const TTSPanel: React.FC<{ content: string; sending: boolean }> = ({
   const [voice, setVoiceList] = useState<any[]>([])
   const audioRef = useRef(null)
 
-  const handleGenAudio = async (message) => {
-    if (!content) return
-    try {
-      const response = await fetch('/api/elevenlabsai', {
-        method: 'POST',
-        headers: {
-          accept: 'audio/mpeg',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message,
-        }),
-      })
-      const blob = await response.blob()
-      const audioURL = URL.createObjectURL(blob)
+  // const handleGenAudio = async (message) => {
+  //   if (!content) return
+  //   try {
+  //     const response = await fetch('/api/elevenlabsai', {
+  //       method: 'POST',
+  //       headers: {
+  //         accept: 'audio/mpeg',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         message,
+  //       }),
+  //     })
+  //     const blob = await response.blob()
+  //     const audioURL = URL.createObjectURL(blob)
 
-      if (audioURL) {
-        setAudioSource(audioURL)
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  //     if (audioURL) {
+  //       setAudioSource(audioURL)
+  //     }
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
 
   const handleSpeak = () => {
     audioRef.current.play()
@@ -85,7 +86,18 @@ const TTSPanel: React.FC<{ content: string; sending: boolean }> = ({
   }
 
   useEffect(() => {
-    handleGenAudio(content)
+    // handleGenAudio(content)
+    const genAudio = async () => {
+      if (!!content) {
+        try {
+          const audioURL = await requestGetTTSApi(content)
+          setAudioSource(audioURL)
+        } catch (error) {
+          console.error('error', error)
+        }
+      }
+    }
+    genAudio()
   }, [])
 
   useEffect(() => {
