@@ -10,6 +10,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition'
 import { useSpeechSynthesis } from 'react-speech-kit'
+import { requestOpenAI } from '~/apis/openai'
 import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
 import { isIOS } from '~/utils'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
@@ -52,30 +53,6 @@ const TTSPanel: React.FC<{ content: string; sending: boolean }> = ({
   const [voice, setVoiceList] = useState<any[]>([])
   const audioRef = useRef(null)
 
-  // const handleGenAudio = async (message) => {
-  //   if (!content) return
-  //   try {
-  //     const response = await fetch('/api/elevenlabsai', {
-  //       method: 'POST',
-  //       headers: {
-  //         accept: 'audio/mpeg',
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         message,
-  //       }),
-  //     })
-  //     const blob = await response.blob()
-  //     const audioURL = URL.createObjectURL(blob)
-
-  //     if (audioURL) {
-  //       setAudioSource(audioURL)
-  //     }
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
-
   const handleSpeak = () => {
     audioRef.current.play()
     // setSpeak(true)
@@ -86,7 +63,6 @@ const TTSPanel: React.FC<{ content: string; sending: boolean }> = ({
   }
 
   useEffect(() => {
-    // handleGenAudio(content)
     const genAudio = async () => {
       if (!!content) {
         try {
@@ -186,16 +162,7 @@ const Content: React.FC = () => {
 
   const handleGenAIResponse = async (messages) => {
     try {
-      const response = await fetch('/api/openai', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          messages,
-        }),
-      })
-      const data = await response.json()
+      const data = await requestOpenAI(messages)
       if (data) {
         setResponse(data.choices[0].message.content)
       }

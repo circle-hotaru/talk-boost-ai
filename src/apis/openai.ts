@@ -1,18 +1,10 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-
-const officalAPI = 'https://api.openai.com'
 const proxyAPI = 'https://chat-api.incircles.xyz'
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const messages = req.body.messages
+export const requestOpenAI = async (messages: string[]) => {
   const requestOptions = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + process.env.OPENAI_API_KEY,
     },
     body: JSON.stringify({
       model: 'gpt-3.5-turbo',
@@ -26,7 +18,7 @@ export default async function handler(
       requestOptions
     )
     const data = await response.json()
-    res.status(200).json(data)
+    return data
   } catch (error) {
     console.error(error)
   }
