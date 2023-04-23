@@ -14,7 +14,7 @@ import { requestOpenAI } from '~/apis/openai'
 import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
 import { isIOS } from '~/utils'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-
+import { Switch } from '@headlessui/react'
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
     <span
@@ -27,10 +27,11 @@ const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   )
 }
 
-const AIPanel: React.FC<{ content: string; sending: boolean }> = ({
-  content,
-  sending,
-}) => {
+const AIPanel: React.FC<{
+  content: string
+  enabled: boolean
+  sending: boolean
+}> = ({ content, enabled, sending }) => {
   return (
     <div className="flex flex-nowrap gap-1 items-center">
       <span
@@ -40,7 +41,7 @@ const AIPanel: React.FC<{ content: string; sending: boolean }> = ({
       >
         {content}
       </span>
-      <TTSPanel content={content} sending={sending} />
+      {enabled && <TTSPanel content={content} sending={sending} />}
     </div>
   )
 }
@@ -115,6 +116,7 @@ const Content: React.FC = () => {
   const [messages, setMessages] = useState<any[]>([])
   const [response, setResponse] = useState<string>('')
   const [recordFlag, setRecordFlag] = useState<boolean>(false)
+  const [enabled, setEnabled] = useState<boolean>(true)
   const {
     transcript,
     listening,
@@ -204,6 +206,22 @@ const Content: React.FC = () => {
 
   return (
     <>
+      <div>
+        <span className="text-blue-600 mr-2">Open the AI Voice Assistant:</span>
+        <Switch
+          checked={enabled}
+          onChange={setEnabled}
+          className={`${enabled ? 'bg-teal-900' : 'bg-teal-700'}
+          align-middle relative inline-flex h-[20px] w-[40px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
+        >
+          <span
+            aria-hidden="true"
+            className={`${enabled ? 'translate-x-5' : 'translate-x-0'}
+            pointer-events-none inline-block h-[16px] w-[16px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
+          />
+        </Switch>
+      </div>
+
       <div className="w-full max-w-3xl flex-1 flex flex-col gap-2 my-4 border-2 font-bold py-2 px-4 rounded-lg overflow-y-auto">
         {messages
           .filter((message) => message.role !== 'system')
@@ -211,8 +229,13 @@ const Content: React.FC = () => {
             role === 'user' ? (
               <UserPanel key={index} content={content} />
             ) : (
-              <AIPanel key={index} content={content} sending={sending} />
-            )
+              <AIPanel
+                key={index}
+                content={content}
+                sending={sending}
+                enabled={enabled}
+              />
+            ),
           )}
         <div ref={latestMessageRef} className="opacity-0 h-0.5">
           -
