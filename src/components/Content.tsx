@@ -6,7 +6,6 @@ import {
   useLayoutEffect,
 } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
-import { sendRequest } from '~/apis/openai'
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition'
@@ -27,7 +26,10 @@ const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   )
 }
 
-const AIPanel: React.FC<{ content: string }> = ({ content }) => {
+const AIPanel: React.FC<{ content: string; sending: boolean }> = ({
+  content,
+  sending,
+}) => {
   return (
     <div className="flex flex-nowrap gap-1 items-center">
       <span
@@ -37,31 +39,72 @@ const AIPanel: React.FC<{ content: string }> = ({ content }) => {
       >
         {content}
       </span>
-      <TTSPanel content={content} />
+      <TTSPanel content={content} sending={sending} />
     </div>
   )
 }
 
-const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
-  const [speak, setSpeak] = useState<Boolean>(true)
+const TTSPanel: React.FC<{ content: string; sending: boolean }> = ({
+  content,
+  sending,
+}) => {
   const [audioSource, setAudioSource] = useState(null)
   const [voice, setVoiceList] = useState<any[]>([])
   const audioRef = useRef(null)
 
+  // const handleGenAudio = async (message) => {
+  //   if (!content) return
+  //   try {
+  //     const response = await fetch('/api/elevenlabsai', {
+  //       method: 'POST',
+  //       headers: {
+  //         accept: 'audio/mpeg',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         message,
+  //       }),
+  //     })
+  //     const blob = await response.blob()
+  //     const audioURL = URL.createObjectURL(blob)
+
+  //     if (audioURL) {
+  //       setAudioSource(audioURL)
+  //     }
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
+
+  const handleSpeak = () => {
+    audioRef.current.play()
+    // setSpeak(true)
+    // if (!speak) {
+    //   audioRef.current.pause();
+    //   audioRef.current.currentTime = 0;
+    // }
+  }
+
   useEffect(() => {
+    // handleGenAudio(content)
     const genAudio = async () => {
-      if (speak && !!content) {
+      if (!!content) {
         try {
           const audioURL = await requestGetTTSApi(content)
           setAudioSource(audioURL)
-          setSpeak(false)
         } catch (error) {
           console.error('error', error)
         }
       }
     }
     genAudio()
-  })
+  }, [])
+
+  useEffect(() => {
+    if (!!audioSource) {
+      audioRef.current.play()
+    }
+  }, [audioSource])
 
   // 这个是语音样本
   // useEffect(() => {
@@ -72,19 +115,17 @@ const TTSPanel: React.FC<{ content: string }> = ({ content }) => {
   //   }
   // }, [voice]);
 
-  const handleSpeak = () => {
-    audioRef.current.play()
-    // setSpeak(true)
-    // if (!speak) {
-    //   audioRef.current.pause();
-    //   audioRef.current.currentTime = 0;
-    // }
-  }
+  useEffect(() => {
+    if (!!audioSource && sending) {
+      audioRef.current.pause()
+    }
+  }, [sending])
+
   return (
     <span>
       {audioSource && (
         <>
-          <audio autoPlay ref={audioRef} src={audioSource} />
+          <audio ref={audioRef} src={audioSource} />
           <button onClick={handleSpeak}>🎧</button>
         </>
       )}
@@ -143,6 +184,26 @@ const Content: React.FC = () => {
     }
   }
 
+  const handleGenAIResponse = async (messages) => {
+    try {
+      const response = await fetch('/api/openai', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages,
+        }),
+      })
+      const data = await response.json()
+      if (data) {
+        setResponse(data.choices[0].message.content)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   useEffect(() => {
     if (response.length !== 0 && response !== 'undefined') {
       setMessages((prevMessages) => [
@@ -161,14 +222,7 @@ const Content: React.FC = () => {
         content:
           'You are an English teacher, please help me practice daily English communication. If I make any mistakes, please point them out and correct them.',
       })
-      sendRequest(messagesToSent, (data: any) => {
-        if (data) {
-          setResponse(data.choices[0].message.content)
-          console.log('Response: ' + data.choices[0].message.content)
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
+      handleGenAIResponse(messagesToSent)
     }
   }, [sending])
 
@@ -190,8 +244,8 @@ const Content: React.FC = () => {
             role === 'user' ? (
               <UserPanel key={index} content={content} />
             ) : (
-              <AIPanel key={index} content={content} />
-            ),
+              <AIPanel key={index} content={content} sending={sending} />
+            )
           )}
         <div ref={latestMessageRef} className="opacity-0 h-0.5">
           -
