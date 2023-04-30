@@ -5,16 +5,18 @@ import {
   useRef,
   useLayoutEffect,
 } from 'react'
-import TextareaAutosize from 'react-textarea-autosize'
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition'
-import { useSpeechSynthesis } from 'react-speech-kit'
 import { requestOpenAI } from '~/apis/openai'
 import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
 import { isIOS } from '~/utils'
-import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-import { Switch } from '@headlessui/react'
+import { SettingOutlined } from '@ant-design/icons'
+import { Input, Button } from 'antd'
+import SettingsModal from './SettingsModal'
+import { useAtom } from 'jotai'
+import { openVoiceAtom } from '~/state/settings'
+
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
     <span
@@ -29,9 +31,10 @@ const UserPanel: React.FC<{ content: string }> = ({ content }) => {
 
 const AIPanel: React.FC<{
   content: string
-  enabled: boolean
   sending: boolean
-}> = ({ content, enabled, sending }) => {
+}> = ({ content, sending }) => {
+  const [openVoice] = useAtom(openVoiceAtom)
+
   return (
     <div className="flex flex-nowrap gap-1 items-center">
       <span
@@ -41,7 +44,7 @@ const AIPanel: React.FC<{
       >
         {content}
       </span>
-      {enabled && <TTSPanel content={content} sending={sending} />}
+      {openVoice && <TTSPanel content={content} sending={sending} />}
     </div>
   )
 }
@@ -103,12 +106,16 @@ const TTSPanel: React.FC<{ content: string; sending: boolean }> = ({
       {audioSource && (
         <>
           <audio ref={audioRef} src={audioSource} />
-          <button onClick={handleSpeak}>🎧</button>
+          <Button type="text" size="small" onClick={handleSpeak}>
+            🎧
+          </Button>
         </>
       )}
     </span>
   )
 }
+
+const { TextArea } = Input
 
 const Content: React.FC = () => {
   const [sending, setSending] = useState<boolean>(false)
@@ -116,14 +123,13 @@ const Content: React.FC = () => {
   const [messages, setMessages] = useState<any[]>([])
   const [response, setResponse] = useState<string>('')
   const [recordFlag, setRecordFlag] = useState<boolean>(false)
-  const [enabled, setEnabled] = useState<boolean>(true)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const {
     transcript,
     listening,
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition()
-  // const { speak } = useSpeechSynthesis()
 
   if (!browserSupportsSpeechRecognition) {
     console.log("Browser doesn't support speech recognition.")
@@ -206,72 +212,52 @@ const Content: React.FC = () => {
 
   return (
     <>
-      <div>
-        <span className="text-blue-600 mr-2">Open the AI Voice Assistant:</span>
-        <Switch
-          checked={enabled}
-          onChange={setEnabled}
-          className={`${enabled ? 'bg-teal-900' : 'bg-teal-700'}
-          align-middle relative inline-flex h-[20px] w-[40px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
-        >
-          <span
-            aria-hidden="true"
-            className={`${enabled ? 'translate-x-5' : 'translate-x-0'}
-            pointer-events-none inline-block h-[16px] w-[16px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
-          />
-        </Switch>
-      </div>
-
-      <div className="w-full max-w-3xl flex-1 flex flex-col gap-2 my-4 border-2 font-bold py-2 px-4 rounded-lg overflow-y-auto">
+      <div className="w-full max-w-3xl flex-1 flex flex-col gap-2 mt-4 border-solid border-2 border-gray-200 font-bold py-2 px-4 rounded-lg overflow-y-auto">
         {messages
           .filter((message) => message.role !== 'system')
           .map(({ role, content }, index) =>
             role === 'user' ? (
               <UserPanel key={index} content={content} />
             ) : (
-              <AIPanel
-                key={index}
-                content={content}
-                sending={sending}
-                enabled={enabled}
-              />
-            ),
+              <AIPanel key={index} content={content} sending={sending} />
+            )
           )}
         <div ref={latestMessageRef} className="opacity-0 h-0.5">
           -
         </div>
       </div>
+
+      <div className="w-full max-w-3xl">
+        <SettingOutlined
+          onClick={() => setIsSettingsOpen(true)}
+          className="self-start mt-4 mb-2 pl-2 text-gray-500 cursor-pointer"
+        />
+      </div>
+
       <div className="w-full max-w-3xl flex flex-wrap justify-end items-center gap-2 mx-auto">
-        <TextareaAutosize
+        <TextArea
+          placeholder="Type your message here"
+          autoSize={{ minRows: 1, maxRows: 6 }}
           value={input}
           onChange={(event) => setInput(event.target.value)}
-          onKeyDown={handleKeyDown}
-          minRows={1}
-          maxRows={10}
-          placeholder="Type your message here"
-          className="w-full flex-none md:flex-1 px-4 py-2 rounded-lg resize-none bg-gray-200 text-gray-900 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
           onFocus={() => setAutoScroll(true)}
           onBlur={() => setAutoScroll(false)}
           autoFocus
+          allowClear
+          onPressEnter={handleKeyDown}
+          className="w-full flex-none md:flex-1 "
         />
-        <button
-          onClick={handleRecord}
-          className="px-4 py-2 border border-blue-600 rounded-lg bg-white font-bold text-blue-600"
-        >
+        <Button type="primary" onClick={handleRecord}>
           {listening ? <span>Speaking</span> : <span>Record</span>}
-        </button>
-        <button
-          onClick={handleSend}
-          disabled={sending}
-          className="px-4 py-2 rounded-lg bg-blue-600 font-bold text-white"
-        >
-          {sending ? (
-            <AiOutlineLoading3Quarters className="animate-spin w-6 h-6" />
-          ) : (
-            <span>Send</span>
-          )}
-        </button>
+        </Button>
+        <Button onClick={handleSend} disabled={sending} loading={sending}>
+          Send
+        </Button>
       </div>
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </>
   )
 }
