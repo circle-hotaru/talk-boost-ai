@@ -14,8 +14,8 @@ import { isIOS } from '~/utils'
 import { SettingOutlined } from '@ant-design/icons'
 import { Input, Button } from 'antd'
 import SettingsModal from './SettingsModal'
-
-interface ContentProps {}
+import { useAtom } from 'jotai'
+import { openVoiceAtom } from '~/state/settings'
 
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
@@ -31,9 +31,10 @@ const UserPanel: React.FC<{ content: string }> = ({ content }) => {
 
 const AIPanel: React.FC<{
   content: string
-  enabled: boolean
   sending: boolean
-}> = ({ content, enabled, sending }) => {
+}> = ({ content, sending }) => {
+  const [openVoice] = useAtom(openVoiceAtom)
+
   return (
     <div className="flex flex-nowrap gap-1 items-center">
       <span
@@ -43,7 +44,7 @@ const AIPanel: React.FC<{
       >
         {content}
       </span>
-      {enabled && <TTSPanel content={content} sending={sending} />}
+      {openVoice && <TTSPanel content={content} sending={sending} />}
     </div>
   )
 }
@@ -116,13 +117,12 @@ const TTSPanel: React.FC<{ content: string; sending: boolean }> = ({
 
 const { TextArea } = Input
 
-const Content: React.FC<ContentProps> = () => {
+const Content: React.FC = () => {
   const [sending, setSending] = useState<boolean>(false)
   const [input, setInput] = useState<string>('')
   const [messages, setMessages] = useState<any[]>([])
   const [response, setResponse] = useState<string>('')
   const [recordFlag, setRecordFlag] = useState<boolean>(false)
-  const [enabled, setEnabled] = useState<boolean>(true)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const {
     transcript,
@@ -219,12 +219,7 @@ const Content: React.FC<ContentProps> = () => {
             role === 'user' ? (
               <UserPanel key={index} content={content} />
             ) : (
-              <AIPanel
-                key={index}
-                content={content}
-                sending={sending}
-                enabled={enabled}
-              />
+              <AIPanel key={index} content={content} sending={sending} />
             )
           )}
         <div ref={latestMessageRef} className="opacity-0 h-0.5">

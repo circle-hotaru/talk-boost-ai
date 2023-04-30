@@ -1,5 +1,7 @@
 import { Modal, Row, Divider, Switch } from 'antd'
 import { SoundOutlined, GithubOutlined } from '@ant-design/icons'
+import { useAtom } from 'jotai'
+import { openVoiceAtom } from '~/state/settings'
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -7,6 +9,7 @@ interface SettingsModalProps {
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
+  const [openVoice, setOpenVoice] = useAtom(openVoiceAtom)
   return (
     <Modal open={isOpen} onCancel={onClose} footer={null} closable={false}>
       <Row align="middle" justify="space-between">
@@ -14,7 +17,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
           <SoundOutlined />
           <span>Turn on voice answer</span>
         </Row>
-        <Switch />
+        <Switch checked={openVoice} onClick={() => setOpenVoice(!openVoice)} />
       </Row>
       <Divider />
       <Row align="middle" justify="space-between">
