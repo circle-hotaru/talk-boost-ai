@@ -17,7 +17,7 @@ import { Input, Button } from 'antd'
 import SettingsModal from './SettingsModal'
 import { useAtom } from 'jotai'
 import { openVoiceAtom } from '~/state/settings'
-const speechsdk = require('microsoft-cognitiveservices-speech-sdk')
+
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
     <span
@@ -104,20 +104,12 @@ const TTSPanel: React.FC<{
         (error) => {
           console.log(error)
           speechSynthesizer.close()
-        },
+        }
       )
     } catch (error) {
       console.error('error', error)
     }
   }
-  // 这个是语音样本
-  // useEffect(() => {
-  //   if (voice.length === 0) {
-  //     requestGetVoiceApi((data) => {
-  //       setVoiceList([...data.voices]);
-  //     });
-  //   }
-  // }, [voice]);
 
   useEffect(() => {
     if (!!audioSource && sending && enabled) {
@@ -179,7 +171,7 @@ const Content: React.FC = () => {
         },
         (err) => {
           recognizer.stopContinuousRecognitionAsync()
-        },
+        }
       )
       recognizer.recognized = function (s, e) {
         if (e.result.text !== undefined) {
@@ -262,7 +254,7 @@ const Content: React.FC = () => {
               <UserPanel key={index} content={content} />
             ) : (
               <AIPanel key={index} content={content} sending={sending} />
-            ),
+            )
           )}
         <div ref={latestMessageRef} className="opacity-0 h-0.5">
           -
