@@ -10,6 +10,7 @@ import SpeechRecognition, {
 } from 'react-speech-recognition'
 import { requestOpenAI } from '~/apis/openai'
 import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
+import { getSpeakToTextApi, getTextToSpeakApi } from '~/apis/newTTS'
 import { isIOS } from '~/utils'
 import { SettingOutlined } from '@ant-design/icons'
 import { Input, Button } from 'antd'
@@ -44,66 +45,81 @@ const AIPanel: React.FC<{
       >
         {content}
       </span>
-      {openVoice && <TTSPanel content={content} sending={sending} />}
+      <TTSPanel enabled={openVoice} content={content} sending={sending} />
     </div>
   )
 }
 
-const TTSPanel: React.FC<{ content: string; sending: boolean }> = ({
-  content,
-  sending,
-}) => {
+const TTSPanel: React.FC<{
+  content: string
+  sending: boolean
+  enabled: boolean
+}> = ({ content, sending, enabled }) => {
   const [audioSource, setAudioSource] = useState(null)
   const [voice, setVoiceList] = useState<any[]>([])
+  const [speak, setSpeak] = useState<boolean>(false)
+  const [openSounds, setOpenSounds] = useState<boolean>(false)
+  const [speechSynthesizer, setSpeechSynthesizer] = useState<any>({})
   const audioRef = useRef(null)
-
   const handleSpeak = () => {
-    audioRef.current.play()
-    // setSpeak(true)
-    // if (!speak) {
-    //   audioRef.current.pause();
-    //   audioRef.current.currentTime = 0;
-    // }
+    if (!speak) {
+      audioRef.current.play()
+      setSpeak(true)
+      setOpenSounds(false)
+    } else {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+      setSpeak(false)
+    }
+  }
+  useEffect(() => {
+    if (Object.keys(speechSynthesizer).length === 0) {
+      let res = getTextToSpeakApi()
+      setSpeechSynthesizer(res)
+    }
+  }, [speechSynthesizer])
+  useEffect(() => {
+    if (enabled) {
+      setOpenSounds(true)
+    }
+  }, [enabled])
+
+  useEffect(() => {
+    if (!!content && Object.keys(speechSynthesizer).length > 0 && openSounds) {
+      genAudio()
+    }
+  }, [content, openSounds, speechSynthesizer])
+
+  const genAudio = async () => {
+    try {
+      speechSynthesizer.speakTextAsync(
+        content,
+        (result) => {
+          const { audioData } = result
+          speechSynthesizer.close()
+          let blob = new Blob([audioData])
+          let urlBlob = URL.createObjectURL(blob)
+          setAudioSource(urlBlob)
+        },
+        (error) => {
+          console.log(error)
+          speechSynthesizer.close()
+        }
+      )
+    } catch (error) {
+      console.error('error', error)
+    }
   }
 
   useEffect(() => {
-    const genAudio = async () => {
-      if (!!content) {
-        try {
-          const audioURL = await requestGetTTSApi(content)
-          setAudioSource(audioURL)
-        } catch (error) {
-          console.error('error', error)
-        }
-      }
-    }
-    genAudio()
-  }, [])
-
-  useEffect(() => {
-    if (!!audioSource) {
-      audioRef.current.play()
-    }
-  }, [audioSource])
-
-  // 这个是语音样本
-  // useEffect(() => {
-  //   if (voice.length === 0) {
-  //     requestGetVoiceApi((data) => {
-  //       setVoiceList([...data.voices]);
-  //     });
-  //   }
-  // }, [voice]);
-
-  useEffect(() => {
-    if (!!audioSource && sending) {
+    if (!!audioSource && sending && enabled) {
       audioRef.current.pause()
     }
   }, [sending])
 
   return (
-    <span>
-      {audioSource && (
+    <span className={enabled ? '' : 'w-1'}>
+      {enabled && (
         <>
           <audio ref={audioRef} src={audioSource} />
           <Button type="text" size="small" onClick={handleSpeak}>
@@ -124,21 +140,14 @@ const Content: React.FC = () => {
   const [response, setResponse] = useState<string>('')
   const [recordFlag, setRecordFlag] = useState<boolean>(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition()
-
-  if (!browserSupportsSpeechRecognition) {
-    console.log("Browser doesn't support speech recognition.")
-  }
+  const [enabled, setEnabled] = useState<boolean>(true)
+  const [listening, setListening] = useState<boolean>(false)
+  const [recognizer, setRecognizer] = useState<any>({})
 
   // auto scroll
   const latestMessageRef = useRef<HTMLDivElement>(null)
   const [autoScroll, setAutoScroll] = useState<boolean>(false)
-
+  const [waiting, setWaiting] = useState<boolean>(false)
   const handleSend = () => {
     const input_json = { role: 'user', content: input }
     setMessages((prevMessages) => [...prevMessages, input_json])
@@ -146,15 +155,40 @@ const Content: React.FC = () => {
     setSending(true)
   }
 
+  useEffect(() => {
+    if (Object.keys(recognizer).length === 0) {
+      let res = getSpeakToTextApi()
+      setRecognizer(res)
+    }
+  }, [recognizer])
+
   const handleRecord = () => {
     if (!recordFlag) {
-      resetTranscript()
-      SpeechRecognition.startListening({ continuous: true })
+      setWaiting(true)
+      recognizer.startContinuousRecognitionAsync(
+        () => {
+          setWaiting(false)
+        },
+        (err) => {
+          recognizer.stopContinuousRecognitionAsync()
+        }
+      )
+      recognizer.recognized = function (s, e) {
+        if (e.result.text !== undefined) {
+          let result = e.result.text
+          setInput((pre) => pre + result)
+        }
+      }
+      recognizer.sessionStopped = (s, e) => {
+        setWaiting(false)
+        recognizer.stopContinuousRecognitionAsync()
+      }
     } else {
-      SpeechRecognition.stopListening()
-      setInput(transcript)
+      recognizer.stopContinuousRecognitionAsync()
     }
+
     setRecordFlag(!recordFlag)
+    setListening(!listening)
   }
 
   const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (event) => {
