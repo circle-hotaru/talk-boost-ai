@@ -79,12 +79,15 @@ const TTSPanel: React.FC<{
     }
   }, [speechSynthesizer])
   useEffect(() => {
+    console.log('enabled', enabled)
     if (enabled) {
       setOpenSounds(true)
     }
   }, [enabled])
 
   useEffect(() => {
+    console.log('open sounds', openSounds)
+
     if (!!content && Object.keys(speechSynthesizer).length > 0 && openSounds) {
       genAudio()
     }
@@ -92,6 +95,7 @@ const TTSPanel: React.FC<{
 
   const genAudio = async () => {
     try {
+      console.log('Audio')
       speechSynthesizer.speakTextAsync(
         content,
         (result) => {
@@ -110,14 +114,6 @@ const TTSPanel: React.FC<{
       console.error('error', error)
     }
   }
-  // 这个是语音样本
-  // useEffect(() => {
-  //   if (voice.length === 0) {
-  //     requestGetVoiceApi((data) => {
-  //       setVoiceList([...data.voices]);
-  //     });
-  //   }
-  // }, [voice]);
 
   useEffect(() => {
     if (!!audioSource && sending && enabled) {
