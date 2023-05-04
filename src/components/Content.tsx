@@ -16,7 +16,7 @@ import { SettingOutlined } from '@ant-design/icons'
 import { Input, Button } from 'antd'
 import SettingsModal from './SettingsModal'
 import { useAtom } from 'jotai'
-import { openVoiceAtom } from '~/state/settings'
+import { openVoiceAtom, openAiCount } from '~/state/settings'
 
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
@@ -31,9 +31,10 @@ const UserPanel: React.FC<{ content: string }> = ({ content }) => {
 }
 
 const AIPanel: React.FC<{
+  index: number
   content: string
   sending: boolean
-}> = ({ content, sending }) => {
+}> = ({ content, sending, index }) => {
   const [openVoice] = useAtom(openVoiceAtom)
 
   return (
@@ -45,7 +46,12 @@ const AIPanel: React.FC<{
       >
         {content}
       </span>
-      <TTSPanel enabled={openVoice} content={content} sending={sending} />
+      <TTSPanel
+        enabled={openVoice}
+        index={index}
+        content={content}
+        sending={sending}
+      />
     </div>
   )
 }
@@ -54,18 +60,19 @@ const TTSPanel: React.FC<{
   content: string
   sending: boolean
   enabled: boolean
-}> = ({ content, sending, enabled }) => {
+  index: number
+}> = ({ content, sending, enabled, index }) => {
   const [audioSource, setAudioSource] = useState(null)
   const [voice, setVoiceList] = useState<any[]>([])
   const [speak, setSpeak] = useState<boolean>(false)
   const [openSounds, setOpenSounds] = useState<boolean>(false)
   const [speechSynthesizer, setSpeechSynthesizer] = useState<any>({})
+  const [aiCount] = useAtom(openAiCount)
   const audioRef = useRef(null)
   const handleSpeak = () => {
     if (!speak) {
-      audioRef.current.play()
+      audioSource ? audioRef.current.play() : setOpenSounds(true)
       setSpeak(true)
-      setOpenSounds(false)
     } else {
       audioRef.current.pause()
       audioRef.current.currentTime = 0
@@ -79,7 +86,7 @@ const TTSPanel: React.FC<{
     }
   }, [speechSynthesizer])
   useEffect(() => {
-    if (enabled) {
+    if (enabled && aiCount === index) {
       setOpenSounds(true)
     }
   }, [enabled])
@@ -148,6 +155,7 @@ const Content: React.FC = () => {
   const latestMessageRef = useRef<HTMLDivElement>(null)
   const [autoScroll, setAutoScroll] = useState<boolean>(false)
   const [waiting, setWaiting] = useState<boolean>(false)
+  const [, setAiCount] = useAtom(openAiCount)
   const handleSend = () => {
     const input_json = { role: 'user', content: input }
     setMessages((prevMessages) => [...prevMessages, input_json])
@@ -220,6 +228,7 @@ const Content: React.FC = () => {
         { role: 'assistant', content: response },
       ])
       setSending(false)
+      setAiCount(messages.filter((item) => item.role !== 'system').length)
     }
   }, [response])
 
@@ -253,7 +262,12 @@ const Content: React.FC = () => {
             role === 'user' ? (
               <UserPanel key={index} content={content} />
             ) : (
-              <AIPanel key={index} content={content} sending={sending} />
+              <AIPanel
+                key={index}
+                content={content}
+                index={index}
+                sending={sending}
+              />
             )
           )}
         <div ref={latestMessageRef} className="opacity-0 h-0.5">
