@@ -111,7 +111,7 @@ const TTSPanel: React.FC<{
         (error) => {
           console.log(error)
           speechSynthesizer.close()
-        },
+        }
       )
     } catch (error) {
       console.error('error', error)
@@ -179,7 +179,7 @@ const Content: React.FC = () => {
         },
         (err) => {
           recognizer.stopContinuousRecognitionAsync()
-        },
+        }
       )
       recognizer.recognized = function (s, e) {
         if (e.result.text !== undefined) {
@@ -268,7 +268,7 @@ const Content: React.FC = () => {
                 index={index}
                 sending={sending}
               />
-            ),
+            )
           )}
         <div ref={latestMessageRef} className="opacity-0 h-0.5">
           -
