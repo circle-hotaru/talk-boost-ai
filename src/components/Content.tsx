@@ -15,9 +15,9 @@ import { isIOS } from '~/utils'
 import { SettingOutlined } from '@ant-design/icons'
 import { Input, Button } from 'antd'
 import SettingsModal from './SettingsModal'
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtom } from 'jotai'
 import { openVoiceAtom, openAiCount } from '~/state/settings'
-const speechsdk = require('microsoft-cognitiveservices-speech-sdk')
+
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
     <span
