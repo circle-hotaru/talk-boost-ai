@@ -17,6 +17,7 @@ import { Input, Button } from 'antd'
 import SettingsModal from './SettingsModal'
 import { useAtom } from 'jotai'
 import { openVoiceAtom, openAiCount } from '~/state/settings'
+import { ENGLISH_TEACHER } from '~/constants'
 
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
   return (
@@ -143,7 +144,12 @@ const { TextArea } = Input
 const Content: React.FC = () => {
   const [sending, setSending] = useState<boolean>(false)
   const [input, setInput] = useState<string>('')
-  const [messages, setMessages] = useState<any[]>([])
+  const [messages, setMessages] = useState<any[]>([
+    {
+      role: 'system',
+      content: ENGLISH_TEACHER,
+    },
+  ])
   const [response, setResponse] = useState<string>('')
   const [recordFlag, setRecordFlag] = useState<boolean>(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
@@ -152,7 +158,7 @@ const Content: React.FC = () => {
   const [recognizer, setRecognizer] = useState<any>({})
 
   // auto scroll
-  const latestMessageRef = useRef<HTMLDivElement>(null)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
   const [autoScroll, setAutoScroll] = useState<boolean>(false)
   const [waiting, setWaiting] = useState<boolean>(false)
   const [, setAiCount] = useAtom(openAiCount)
@@ -234,19 +240,17 @@ const Content: React.FC = () => {
 
   useEffect(() => {
     if (sending && messages.length > 0) {
-      let messagesToSent = messages
-      messagesToSent.unshift({
-        role: 'system',
-        content:
-          'You are an English teacher, please help me practice daily English communication. If I make any mistakes, please point them out and correct them.',
-      })
-      handleGenAIResponse(messagesToSent)
+      handleGenAIResponse(messages)
     }
   }, [sending])
 
+  // useEffect(() => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  // }, [messages])
+
   useLayoutEffect(() => {
     setTimeout(() => {
-      const dom = latestMessageRef.current
+      const dom = messagesEndRef.current
       if (dom && !isIOS() && autoScroll) {
         dom.scrollIntoView({ behavior: 'smooth', block: 'end' })
       }
@@ -257,7 +261,7 @@ const Content: React.FC = () => {
     <>
       <div className="w-full max-w-3xl flex-1 flex flex-col gap-2 mt-4 border-solid border-2 border-gray-200 font-bold py-2 px-4 rounded-lg overflow-y-auto">
         {messages
-          .filter((message) => message.role !== 'system')
+          .slice(1)
           .map(({ role, content }, index) =>
             role === 'user' ? (
               <UserPanel key={index} content={content} />
@@ -270,9 +274,7 @@ const Content: React.FC = () => {
               />
             )
           )}
-        <div ref={latestMessageRef} className="opacity-0 h-0.5">
-          -
-        </div>
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="w-full max-w-3xl">
