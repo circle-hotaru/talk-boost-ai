@@ -5,9 +5,6 @@ import {
   useRef,
   useLayoutEffect,
 } from 'react'
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from 'react-speech-recognition'
 import { requestOpenAI } from '~/apis/openai'
 import { requestGetVoiceApi, requestGetTTSApi } from '~/apis/tts'
 import { getSpeakToTextApi, getTextToSpeakApi } from '~/apis/newTTS'
@@ -150,6 +147,8 @@ const Content: React.FC = () => {
       content: ENGLISH_TEACHER,
     },
   ])
+  const displayMessages = messages.slice(1)
+
   const [response, setResponse] = useState<string>('')
   const [recordFlag, setRecordFlag] = useState<boolean>(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
@@ -244,10 +243,6 @@ const Content: React.FC = () => {
     }
   }, [sending])
 
-  // useEffect(() => {
-  //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-  // }, [messages])
-
   useLayoutEffect(() => {
     setTimeout(() => {
       const dom = messagesEndRef.current
@@ -259,22 +254,26 @@ const Content: React.FC = () => {
 
   return (
     <>
-      <div className="w-full max-w-3xl flex-1 flex flex-col gap-2 mt-4 border-solid border-2 border-gray-200 font-bold py-2 px-4 rounded-lg overflow-y-auto">
-        {messages
-          .slice(1)
-          .map(({ role, content }, index) =>
-            role === 'user' ? (
-              <UserPanel key={index} content={content} />
-            ) : (
-              <AIPanel
-                key={index}
-                content={content}
-                index={index}
-                sending={sending}
-              />
-            )
-          )}
-        <div ref={messagesEndRef} />
+      <div className="w-full max-w-3xl flex-1 flex flex-col gap-2 mt-4 border-solid border-2 border-gray-200 text-gray-900 py-2 px-4 rounded-lg overflow-y-auto">
+        {displayMessages.length > 0 ? (
+          <>
+            {displayMessages.map(({ role, content }, index) =>
+              role === 'user' ? (
+                <UserPanel key={index} content={content} />
+              ) : (
+                <AIPanel
+                  key={index}
+                  content={content}
+                  index={index}
+                  sending={sending}
+                />
+              )
+            )}
+            <div ref={messagesEndRef} />
+          </>
+        ) : (
+          <p className="self-center">You are chatting with AI teacher</p>
+        )}
       </div>
 
       <div className="w-full max-w-3xl">
@@ -298,7 +297,17 @@ const Content: React.FC = () => {
           className="w-full flex-none md:flex-1 "
         />
         <Button type="primary" onClick={handleRecord}>
-          {listening ? <span>Speaking</span> : <span>Record</span>}
+          {listening ? (
+            <div className="flex gap-1 items-center">
+              <span>Speaking</span>
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+              </span>
+            </div>
+          ) : (
+            <span>Record</span>
+          )}
         </Button>
         <Button onClick={handleSend} disabled={sending} loading={sending}>
           Send

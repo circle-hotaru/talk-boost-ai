@@ -17,7 +17,7 @@ const Home: NextPage = () => {
 
       <main className="h-screen p-4 md:py-8 flex flex-col items-center bg-gray-100">
         <h1 className="text-3xl font-bold text-gray-900 text-center">
-          Welcome to TalkBoost
+          TalkBoost
         </h1>
 
         <Content />
