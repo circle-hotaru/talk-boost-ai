@@ -272,7 +272,7 @@ const Content: React.FC = () => {
             <div ref={messagesEndRef} />
           </>
         ) : (
-          <p className="self-center">You are chatting with AI teacher</p>
+          <p className="self-center">You are chatting with an AI teacher</p>
         )}
       </div>
 
