@@ -10,7 +10,7 @@ const Home: NextPage = () => {
         <title>TalkBoost</title>
         <meta
           name="description"
-          content="TalkBoost is a free and open-source web project that helps you practice your spoken language skills and improve your speaking ability using ChatGPT."
+          content="TalkBoost is a web app that uses AI to help you practice communicating in English."
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
