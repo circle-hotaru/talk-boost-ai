@@ -1,8 +1,12 @@
-TalkBoost is a free and open-source web project that helps you practice your spoken language skills and improve your speaking ability using ChatGPT.
+TalkBoost is a web app that uses AI to help you practice communicating in English.
 
-## Features
+## ✨ Demo
 
-## Development
+For the best demo experience, try [our site](https://talk.incircles.xyz/) directly :)
+
+## 🚀 Features
+
+## 👨‍🚀 Development
 
 ```bash
 pnpm install
