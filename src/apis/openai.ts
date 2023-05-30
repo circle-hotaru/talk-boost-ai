@@ -1,6 +1,6 @@
 const proxyAPI = 'https://chat-api.incircles.xyz'
 
-export const requestOpenAI = async (messages: string[]) => {
+export const requestOpenAI = async (messages: any[]) => {
   const requestOptions = {
     method: 'POST',
     headers: {
