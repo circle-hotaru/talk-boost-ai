@@ -1,13 +1,14 @@
-const proxyAPI = 'https://chat-api.incircles.xyz'
+const proxyAPI = 'https://chimeragpt.adventblocks.cc'
 
 export const requestOpenAI = async (messages: any[]) => {
   const requestOptions = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.CHIMERA_API_KEY}`,
     },
     body: JSON.stringify({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4',
       messages: messages,
     }),
   }
