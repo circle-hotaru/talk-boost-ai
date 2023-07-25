@@ -15,7 +15,7 @@ export const requestOpenAI = async (messages: any[]) => {
 
   try {
     const response = await fetch(
-      `${proxyAPI}/v1/chat/completions`,
+      `${proxyAPI}/api/v1/chat/completions`,
       requestOptions
     )
     const data = await response.json()
