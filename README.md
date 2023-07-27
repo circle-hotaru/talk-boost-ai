@@ -1,6 +1,6 @@
 <h1 align="center">TalkBoostAI</h1>
 
-English | [简体中文](./README.zh-CN.md)
+English | [简体中文](./README_CN.md)
 
 ## 🌟 Introduction
 
