@@ -7,17 +7,17 @@ const Home: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>TalkBoost</title>
+        <title>TalkBoostAI</title>
         <meta
           name="description"
-          content="TalkBoost is a web app that uses AI to help you practice communicating in English."
+          content="TalkBoostAI is a web application that utilizes AI to help you improve your English speaking and conversation skills."
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="h-screen p-4 md:py-8 flex flex-col items-center bg-gray-100">
         <h1 className="text-3xl font-bold text-gray-900 text-center">
-          TalkBoost
+          TalkBoostAI
         </h1>
 
         <Content />
