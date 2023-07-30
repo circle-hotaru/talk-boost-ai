@@ -13,7 +13,7 @@ import { Input, Button } from 'antd'
 import SettingsModal from './SettingsModal'
 import AIPanel from './AIPanel'
 import { useAtom } from 'jotai'
-import { openAiCount } from '~/state/settings'
+import { openAiCount } from '~/state'
 import { ENGLISH_TEACHER } from '~/constants'
 
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {

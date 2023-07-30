@@ -8,7 +8,7 @@ export const requestOpenAI = async (messages: any[]) => {
       Authorization: `Bearer ${process.env.CHIMERA_API_KEY}`,
     },
     body: JSON.stringify({
-      model: 'gpt-4',
+      model: 'gpt-3.5-turbo',
       messages: messages,
     }),
   }

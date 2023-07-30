@@ -30,6 +30,10 @@ In the project directory, create a file called .env. Open the .env file and add 
 CHIMERA_API_KEY=<YOUR-CHIMERA-API-Key>
 ```
 
+### Setup database
+
+https://supabase.com/partners/integrations/prisma
+
 ### Running the Application
 
 ```

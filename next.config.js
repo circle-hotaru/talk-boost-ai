@@ -7,6 +7,9 @@ const nextConfig = {
     AZURE_REGION: process.env.AZURE_REGION,
     CHIMERA_API_KEY: process.env.CHIMERA_API_KEY,
   },
+  experimental: {
+    appDir: true,
+  },
 }
 
 module.exports = nextConfig
