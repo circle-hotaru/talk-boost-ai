@@ -19,8 +19,9 @@ const Home: NextPage = () => {
         <h1 className="text-3xl font-bold text-gray-900 text-center">
           TalkBoostAI
         </h1>
-
-        <Content />
+        <div className="w-full max-w-3xl flex-1 flex">
+          <Content />
+        </div>
       </main>
     </div>
   )
