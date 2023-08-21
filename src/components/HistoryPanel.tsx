@@ -1,19 +1,27 @@
-import { useState, useEffect, useRef } from 'react'
-import { isIOS, setLocal, getLocal } from '~/utils'
+import {
+  useState,
+  useEffect,
+  useRef,
+  useLayoutEffect,
+  forwardRef,
+  useImperativeHandle,
+} from 'react'
+import { isIOS, setLocal, getLocal, removeLocal } from '~/utils'
 import { useAtom } from 'jotai'
-import { Drawer } from 'antd'
+import { Drawer, Space } from 'antd'
 import { recordNowHistory, recordNowHistoryName } from '~/state/settings'
 import dayjs from 'dayjs'
-import { DoubleRightOutlined } from '@ant-design/icons'
-const HistoryPanel: React.FC<{
-  msgList: any[]
-}> = ({ msgList }) => {
+import { DoubleRightOutlined, CloseOutlined } from '@ant-design/icons'
+const HistoryPanel = ({ msgList }, ref) => {
   const [historyList, setHistoryList] = useState([])
   const [current, setCurrent] = useState(0)
   const [recordCount, setRecordCount] = useAtom(recordNowHistory)
   const [recordName, setRecordName] = useAtom(recordNowHistoryName)
   const [recordFlags, setRecordFlags] = useState(false)
   const [open, setOpen] = useState(false)
+  useImperativeHandle(ref, () => ({
+    handleAdd: handleAddHistory,
+  }))
   useEffect(() => {
     if (!getLocal('history')) {
       setLocal('history', [
@@ -45,6 +53,9 @@ const HistoryPanel: React.FC<{
     if (historyList.length > 0 && recordFlags) {
       setLocal('history', historyList)
       setRecordFlags(false)
+    }
+    if (historyList.length === 0) {
+      removeLocal('history')
     }
   }, [historyList, recordFlags])
 
@@ -94,7 +105,8 @@ const HistoryPanel: React.FC<{
     setCurrent(historyList.length)
     setRecordFlags(true)
   }
-  const handleRemove = (index, id) => {
+  const handleRemove = (index) => {
+    setRecordFlags(true)
     setHistoryList((value) => {
       const copy = [...value]
       copy.splice(index, 1)
@@ -111,15 +123,9 @@ const HistoryPanel: React.FC<{
   const onClose = () => {
     setOpen(false)
   }
-  const containerStyle: React.CSSProperties = {
-    position: 'relative',
-    padding: 48,
-    overflow: 'hidden',
-    textAlign: 'center',
-  }
   return (
     <>
-      {isIOS ? (
+      {!isIOS() ? (
         <div className="max-w-xs w-40 bg-gray-700 mt-4 mr-2 flex flex-col justify-between">
           <div className="flex-1">
             {historyList.map((item, index) => (
@@ -148,23 +154,47 @@ const HistoryPanel: React.FC<{
           </div>
         </div>
       ) : (
-        <div>
-          <div
-            className=" text-gray-950 flex items-center"
-            onClick={showDrawer}
-          >
+        <div className=" text-gray-950 flex items-center pr-3">
+          <div onClick={showDrawer}>
             <DoubleRightOutlined />
           </div>
           <Drawer
             placement="left"
+            title="历史记录"
             closable={false}
             onClose={onClose}
             open={open}
             getContainer={false}
-          ></Drawer>
+            extra={
+              <Space>
+                <CloseOutlined onClick={onClose} className="text-gray-400" />
+              </Space>
+            }
+          >
+            <div>
+              {historyList.map((item, index) => (
+                <div
+                  className={`font-bold  h-20 p-3 border-solid border-b border-t-0 border-r-0 border-l-0 border-white text-base ${
+                    current === index
+                      ? 'bg-gray-900 text-amber-50'
+                      : 'bg-gray-700 text-gray-400'
+                  }`}
+                  key={item.id}
+                  onClick={() => handleItemClick(item, index)}
+                >
+                  {item.name}
+                  <div className="text-gray-400 text-xs text-end mt-3 cursor-pointer">
+                    <span onClick={() => handleRemove(index, item.id)}>
+                      删除
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Drawer>
         </div>
       )}
     </>
   )
 }
-export default HistoryPanel
+export default forwardRef(HistoryPanel)

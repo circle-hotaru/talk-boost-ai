@@ -15,3 +15,8 @@ export const getLocal = (name) => {
   let item = window.localStorage.getItem(name)
   return JSON.parse(item)
 }
+
+export const removeLocal = (name) => {
+  if (!name) return
+  window.localStorage.removeItem(name)
+}

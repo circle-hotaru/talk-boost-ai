@@ -8,7 +8,7 @@ import {
 import { requestOpenAI } from '~/apis/openai'
 import { getSpeakToTextApi } from '~/apis/newTTS'
 import { isIOS, setLocal, getLocal } from '~/utils'
-import { SettingOutlined } from '@ant-design/icons'
+import { SettingOutlined, PlusOutlined } from '@ant-design/icons'
 import { Input, Button } from 'antd'
 import SettingsModal from './SettingsModal'
 import AIPanel from './AIPanel'
@@ -55,7 +55,7 @@ const Content: React.FC = () => {
   const [autoScroll, setAutoScroll] = useState<boolean>(false)
   const [waiting, setWaiting] = useState<boolean>(false)
   const [, setAiCount] = useAtom(openAiCount)
-
+  const historyRef = useRef(null)
   const handleSend = () => {
     const input_json = { role: 'user', content: input }
     setMessages((prevMessages) => [...prevMessages, input_json])
@@ -121,6 +121,10 @@ const Content: React.FC = () => {
     }
   }
 
+  const addNewHistory = () => {
+    historyRef.current.handleAdd()
+  }
+
   useEffect(() => {
     if (response.length !== 0 && response !== 'undefined') {
       setMessages((prevMessages) => [
@@ -143,7 +147,7 @@ const Content: React.FC = () => {
     console.log('recordName111', historyList)
     let currentList =
       historyList?.find((item) => item.name === recordName)?.details || []
-    setMessages(() => currentList)
+    setMessages(currentList.filter((item) => item.role !== 'system'))
   }, [recordName])
 
   useLayoutEffect(() => {
@@ -157,7 +161,7 @@ const Content: React.FC = () => {
 
   return (
     <>
-      <HistoryPanel msgList={messages} />
+      <HistoryPanel ref={historyRef} msgList={messages} />
       <div className="w-full max-w-3xl flex flex-1 flex-col items-center">
         <div className="w-full max-w-3xl flex-1 flex flex-col gap-2 mt-4 border-solid border-2 border-gray-200 text-gray-900 py-2 px-4 rounded-lg overflow-y-auto">
           {displayMessages.length > 0 ? (
@@ -186,6 +190,12 @@ const Content: React.FC = () => {
             onClick={() => setIsSettingsOpen(true)}
             className="self-start mt-4 mb-2 pl-2 text-gray-500 cursor-pointer"
           />
+          {isIOS() && (
+            <PlusOutlined
+              onClick={addNewHistory}
+              className="self-start mt-4 mb-2 pl-2 text-gray-500 cursor-pointer"
+            />
+          )}
         </div>
 
         <div className="w-full max-w-3xl flex flex-wrap justify-end items-center gap-2 mx-auto">
