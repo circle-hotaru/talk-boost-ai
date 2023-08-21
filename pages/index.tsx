@@ -18,7 +18,7 @@ const Home: NextPage = () => {
   return (
     <Layout className="h-screen bg-[#efede7]">
       <DynamicNavbar />
-      <Content className="p-4 md:py-8 flex flex-col items-center">
+      <Content className="p-4 pt-0 md:pb-8 flex flex-col items-center">
         <PageContent />
         <AuthModal />
         <DynamicUserInfo />
