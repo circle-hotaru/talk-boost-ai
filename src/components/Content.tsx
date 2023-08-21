@@ -13,7 +13,7 @@ import { Input, Button } from 'antd'
 import SettingsModal from './SettingsModal'
 import AIPanel from './AIPanel'
 import { useAtom } from 'jotai'
-import { openAiCount } from '~/state/settings'
+import { openAiCount } from '~/state'
 import { ENGLISH_TEACHER } from '~/constants'
 
 const UserPanel: React.FC<{ content: string }> = ({ content }) => {
@@ -145,7 +145,7 @@ const Content: React.FC = () => {
 
   return (
     <>
-      <div className="w-full max-w-3xl flex-1 flex flex-col gap-2 mt-4 border-solid border-2 border-gray-200 text-gray-900 py-2 px-4 rounded-lg overflow-y-auto">
+      <div className="w-full max-w-3xl flex-1 flex flex-col gap-2 border-solid border-2 border-gray-200 text-gray-900 py-2 px-4 rounded-lg overflow-y-auto">
         {displayMessages.length > 0 ? (
           <>
             {displayMessages.map(({ role, content }, index) =>

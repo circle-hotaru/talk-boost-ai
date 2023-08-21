@@ -1,7 +1,7 @@
 import { Modal, Row, Divider, Switch } from 'antd'
 import { SoundOutlined, GithubOutlined } from '@ant-design/icons'
 import { useAtom } from 'jotai'
-import { openVoiceAtom } from '~/state/settings'
+import { openVoiceAtom } from '~/state'
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -26,11 +26,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
           <span>Link</span>
         </Row>
         <a
-          href=" https://github.com/circle-hotaru/talk-boost"
+          href=" https://github.com/circle-hotaru/talk-boost-ai"
           target="_blank"
           rel="noopener noreferrer"
         >
-          https://github.com/circle-hotaru/talk-boost
+          https://github.com/circle-hotaru/talk-boost-ai
         </a>
       </Row>
     </Modal>

@@ -4,5 +4,7 @@
   "editor.formatOnSave": true,
   "prettier.singleQuote": true,
   "prettier.semi": false,
-  "prettier.trailingComma": "es5"
+  "prettier.trailingComma": "es5",
+  "typescript.tsdk": "node_modules/.pnpm/typescript@5.0.3/node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }
