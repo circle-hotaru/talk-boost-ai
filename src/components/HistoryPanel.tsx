@@ -140,7 +140,7 @@ const HistoryPanel = ({ msgList }, ref) => {
               >
                 {item.name}
                 <div className="text-gray-400 text-xs text-end mt-3 cursor-pointer">
-                  <span onClick={() => handleRemove(index, item.id)}>删除</span>
+                  <span onClick={() => handleRemove(index)}>删除</span>
                 </div>
               </div>
             ))}
@@ -184,9 +184,7 @@ const HistoryPanel = ({ msgList }, ref) => {
                 >
                   {item.name}
                   <div className="text-gray-400 text-xs text-end mt-3 cursor-pointer">
-                    <span onClick={() => handleRemove(index, item.id)}>
-                      删除
-                    </span>
+                    <span onClick={() => handleRemove(index)}>删除</span>
                   </div>
                 </div>
               ))}
