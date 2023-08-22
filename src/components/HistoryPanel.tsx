@@ -126,7 +126,7 @@ const HistoryPanel = ({ msgList }, ref) => {
   return (
     <>
       {!isIOS() ? (
-        <div className="max-w-xs w-40 bg-gray-700 mt-4 mr-2 flex flex-col justify-between">
+        <div className="h-full max-w-xs w-40 bg-gray-700 mt-4 mr-2 flex flex-col justify-between">
           <div className="flex-1">
             {historyList.map((item, index) => (
               <div
