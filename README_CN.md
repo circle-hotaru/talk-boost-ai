@@ -18,17 +18,21 @@ TalkBoostAI 是一个利用 AI 来帮助你提高英语口语交流能力的网�
 
 ## 👨‍🚀 开发
 
-### Get API key
+### 获取 API key
 
 从 [ChimeraGPT Discord](https://discord.gg/chimeragpt) 获取你的 ChimeraGPT API key。
 
-### Setup .env
+### 设置 .env
 
 请在项目目录中，创建一个名为 .env 的文件。打开 .env 文件，并添加以下内容：
 
 ```
 CHIMERA_API_KEY=<YOUR-CHIMERA-API-Key>
 ```
+
+### 设置数据库
+
+https://supabase.com/partners/integrations/prisma
 
 ### 运行应用
 

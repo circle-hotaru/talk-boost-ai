@@ -13,7 +13,7 @@ import { Input, Button } from 'antd'
 import SettingsModal from './SettingsModal'
 import AIPanel from './AIPanel'
 import { useAtom } from 'jotai'
-import { openAiCount } from '~/state/settings'
+import { openAiCount } from '~/state'
 import { ENGLISH_TEACHER } from '~/constants'
 import HistoryPanel from './HistoryPanel'
 import { recordNowHistoryName } from '~/state/settings'
@@ -162,7 +162,7 @@ const Content: React.FC = () => {
   return (
     <>
       <HistoryPanel ref={historyRef} msgList={messages} />
-      <div className="w-full max-w-3xl flex flex-1 flex-col items-center">
+      <div className="w-full h-full max-w-3xl flex flex-1 flex-col items-center">
         <div className="w-full max-w-3xl flex-1 flex flex-col gap-2 mt-4 border-solid border-2 border-gray-200 text-gray-900 py-2 px-4 rounded-lg overflow-y-auto">
           {displayMessages.length > 0 ? (
             <>

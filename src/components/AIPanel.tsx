@@ -3,7 +3,7 @@ import { useAtom } from 'jotai'
 import { Button, Divider } from 'antd'
 import { getTextToSpeakApi } from '~/apis/newTTS'
 import { requestOpenAI } from '~/apis/openai'
-import { openVoiceAtom, openAiCount } from '~/state/settings'
+import { openVoiceAtom, openAiCount } from '~/state'
 import { TRANSLATE_SYSTEM_PROMPT, TRANSLATE_PROMPT } from '~/constants'
 import { PlayCircleOutlined, TranslationOutlined } from '@ant-design/icons'
 
