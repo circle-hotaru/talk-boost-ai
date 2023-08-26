@@ -2,6 +2,11 @@ export const isIOS = () => {
   const userAgent = navigator.userAgent.toLowerCase()
   return /iphone|ipad|ipod/.test(userAgent)
 }
+
+export const isMobile = () => {
+  return window.matchMedia('(max-width: 768px)').matches
+}
+
 export const setLocal = (name, data) => {
   if (!name) return
   if (typeof data !== 'string') {

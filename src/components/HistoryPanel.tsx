@@ -1,17 +1,11 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useLayoutEffect,
-  forwardRef,
-  useImperativeHandle,
-} from 'react'
-import { isIOS, setLocal, getLocal, removeLocal } from '~/utils'
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
+import { isMobile, setLocal, getLocal, removeLocal } from '~/utils'
 import { useAtom } from 'jotai'
 import { Drawer, Space } from 'antd'
 import { recordNowHistory, recordNowHistoryName } from '~/state/settings'
 import dayjs from 'dayjs'
 import { DoubleRightOutlined, CloseOutlined } from '@ant-design/icons'
+
 const HistoryPanel = ({ msgList }, ref) => {
   const [historyList, setHistoryList] = useState([])
   const [current, setCurrent] = useState(0)
@@ -125,7 +119,7 @@ const HistoryPanel = ({ msgList }, ref) => {
   }
   return (
     <>
-      {!isIOS() ? (
+      {!isMobile() ? (
         <div className="h-full max-w-xs w-40 bg-gray-700 mt-4 mr-2 flex flex-col justify-between">
           <div className="flex-1">
             {historyList.map((item, index) => (
@@ -150,7 +144,7 @@ const HistoryPanel = ({ msgList }, ref) => {
             className="text-center font-bold bg-gray-900 h-9 leading-8 cursor-pointer"
             onClick={handleAddHistory}
           >
-            +
+            ➕
           </div>
         </div>
       ) : (
