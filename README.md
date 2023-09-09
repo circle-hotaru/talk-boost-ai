@@ -18,17 +18,9 @@ For the best demo experience, try [our site](https://talk.incircles.xyz/) direct
 
 ## 👨‍🚀 Development
 
-### Get API key
-
-get your ChimeraGPT API key from the [ChimeraGPT Discord](https://discord.gg/chimeragpt).
-
 ### Setup .env
 
-In the project directory, create a file called .env. Open the .env file and add the following line:
-
-```
-CHIMERA_API_KEY=<YOUR-CHIMERA-API-Key>
-```
+In the project directory, create a file called .env.
 
 ### Setup database
 

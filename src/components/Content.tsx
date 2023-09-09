@@ -144,7 +144,6 @@ const Content: React.FC = () => {
 
   useEffect(() => {
     let historyList = getLocal('history')
-    console.log('recordName111', historyList)
     let currentList =
       historyList?.find((item) => item.name === recordName)?.details || []
     setMessages(currentList.filter((item) => item.role !== 'system'))
