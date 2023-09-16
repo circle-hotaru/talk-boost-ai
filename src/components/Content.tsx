@@ -157,7 +157,7 @@ const Content: React.FC = () => {
     }, 500)
   })
 
-  const displayMessages = messages.slice()
+  const displayMessages = messages.filter((item) => item.role !== 'system')
 
   return (
     <>
