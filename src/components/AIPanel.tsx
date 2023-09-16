@@ -1,102 +1,17 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { useAtom } from 'jotai'
 import { Button, Divider } from 'antd'
-import { getTextToSpeakApi } from '~/apis/newTTS'
 import { requestOpenAI } from '~/apis/openai'
-import { openVoiceAtom, openAiCount } from '~/state'
+import { openVoiceAtom } from '~/state'
 import { TRANSLATE_SYSTEM_PROMPT, TRANSLATE_PROMPT } from '~/constants'
-import { PlayCircleOutlined, TranslationOutlined } from '@ant-design/icons'
-
-const TTSPanel: React.FC<{
-  content: string
-  sending: boolean
-  enabled: boolean
-  index: number
-}> = ({ content, sending, enabled, index }) => {
-  const [audioSource, setAudioSource] = useState(null)
-  const [speak, setSpeak] = useState<boolean>(false)
-  const [openSounds, setOpenSounds] = useState<boolean>(false)
-  const [speechSynthesizer, setSpeechSynthesizer] = useState<any>({})
-  const [aiCount] = useAtom(openAiCount)
-  const audioRef = useRef(null)
-  const handleSpeak = () => {
-    if (!speak) {
-      audioSource ? audioRef.current.play() : setOpenSounds(true)
-      setSpeak(true)
-    } else {
-      audioRef.current.pause()
-      audioRef.current.currentTime = 0
-      setSpeak(false)
-    }
-  }
-
-  useEffect(() => {
-    if (Object.keys(speechSynthesizer).length === 0) {
-      let res = getTextToSpeakApi()
-      setSpeechSynthesizer(res)
-    }
-  }, [speechSynthesizer])
-  useEffect(() => {
-    if (enabled && aiCount === index) {
-      setOpenSounds(true)
-    }
-  }, [enabled])
-
-  useEffect(() => {
-    if (!!content && Object.keys(speechSynthesizer).length > 0 && openSounds) {
-      genAudio()
-    }
-  }, [content, openSounds, speechSynthesizer])
-
-  const genAudio = async () => {
-    try {
-      speechSynthesizer.speakTextAsync(
-        content,
-        (result) => {
-          const { audioData } = result
-          speechSynthesizer.close()
-          let blob = new Blob([audioData])
-          let urlBlob = URL.createObjectURL(blob)
-          setAudioSource(urlBlob)
-        },
-        (error) => {
-          console.log(error)
-          speechSynthesizer.close()
-        }
-      )
-    } catch (error) {
-      console.error('error', error)
-    }
-  }
-
-  useEffect(() => {
-    if (!!audioSource && sending && enabled) {
-      audioRef.current.pause()
-    }
-  }, [sending])
-
-  return (
-    <span className={enabled ? '' : 'w-1'}>
-      {enabled && (
-        <>
-          <audio ref={audioRef} src={audioSource} />
-
-          <Button
-            onClick={handleSpeak}
-            size="small"
-            icon={<PlayCircleOutlined />}
-          />
-        </>
-      )}
-    </span>
-  )
-}
+import { TranslationOutlined } from '@ant-design/icons'
+import PlayerBtn from './PlayerBtn'
 
 const AIPanel: React.FC<{
   index: number
   content: string
   sending: boolean
-}> = ({ content, sending, index }) => {
+}> = ({ content, index }) => {
   const [openVoice] = useAtom(openVoiceAtom)
   const [translating, setTranslating] = useState(false)
   const [translateContent, setTranslateContent] = useState(null)
@@ -138,12 +53,7 @@ const AIPanel: React.FC<{
       </div>
 
       <div className="flex items-center gap-1">
-        <TTSPanel
-          enabled={openVoice}
-          index={index}
-          content={content}
-          sending={sending}
-        />
+        {openVoice && <PlayerBtn index={index} content={content} />}
         <Button
           onClick={handleTranslate}
           size="small"

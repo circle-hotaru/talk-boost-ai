@@ -7,7 +7,7 @@ import {
 } from 'react'
 import { requestOpenAI } from '~/apis/openai'
 import { getSpeakToTextApi } from '~/apis/newTTS'
-import { isIOS, setLocal, getLocal } from '~/utils'
+import { isIOS, getLocal } from '~/utils'
 import { SettingOutlined, PlusOutlined } from '@ant-design/icons'
 import { Input, Button } from 'antd'
 import SettingsModal from './SettingsModal'
@@ -228,7 +228,6 @@ const Content: React.FC = () => {
           </Button>
         </div>
       </div>
-
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
