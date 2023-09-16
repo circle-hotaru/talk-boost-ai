@@ -41,7 +41,6 @@ const Content: React.FC = () => {
       content: ENGLISH_TEACHER,
     },
   ])
-  const displayMessages = messages.slice()
 
   const [response, setResponse] = useState<string>('')
   const [recordFlag, setRecordFlag] = useState<boolean>(false)
@@ -157,6 +156,8 @@ const Content: React.FC = () => {
       }
     }, 500)
   })
+
+  const displayMessages = messages.slice()
 
   return (
     <>
