@@ -139,7 +139,7 @@ const Content: React.FC = () => {
         content: ENGLISH_TEACHER,
       },
     ]
-    setMessages(currentList.filter((item) => item.role !== 'system'))
+    setMessages(currentList)
   }, [recordName])
 
   useLayoutEffect(() => {
