@@ -16,7 +16,7 @@ const { Content } = Layout
 
 const Home: NextPage = () => {
   return (
-    <Layout className="h-screen bg-[#efede7]">
+    <Layout className="h-screen bg-primary">
       <DynamicNavbar />
       <Content className="w-full h-screen flex-1 flex p-4 pt-0 md:pb-8 flex-row justify-center items-center">
         <PageContent />

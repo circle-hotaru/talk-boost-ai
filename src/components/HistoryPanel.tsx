@@ -5,6 +5,7 @@ import { Drawer, Space } from 'antd'
 import { recordNowHistory, recordNowHistoryName } from '~/state/settings'
 import dayjs from 'dayjs'
 import { DoubleRightOutlined, CloseOutlined } from '@ant-design/icons'
+import { ENGLISH_TEACHER } from '~/constants'
 
 const HistoryPanel = ({ msgList }, ref) => {
   const [historyList, setHistoryList] = useState([])
@@ -90,7 +91,12 @@ const HistoryPanel = ({ msgList }, ref) => {
         {
           name: `${date}-${recordCount + 1}`,
           id: pre.length + 1,
-          details: [],
+          details: [
+            {
+              role: 'system',
+              content: ENGLISH_TEACHER,
+            },
+          ],
         },
       ]
     })
@@ -120,31 +126,27 @@ const HistoryPanel = ({ msgList }, ref) => {
   return (
     <>
       {!isMobile() ? (
-        <div className="h-full max-w-xs w-40 bg-gray-700 mt-4 mr-2 flex flex-col justify-between">
-          <div className="flex-1">
+        <div className="h-full max-w-xs w-40 bg-primary flex flex-col justify-between rounded-lg overflow-auto border-solid border-2 border-gray-line mr-2">
+          <div className="flex-1 overflow-y-auto rounded-lg border-solid border-0 border-gray-line">
             {historyList.map((item, index) => (
               <div
-                className={`font-bold  h-20 p-3 border-solid border-b border-t-0 border-r-0 border-l-0 border-white text-base ${
-                  current === index
-                    ? 'bg-gray-900 text-amber-50'
-                    : 'bg-gray-700 text-gray-400'
-                }`}
+                className={`font-bold  h-20 p-3 border-solid border-0 border-b-2 border-gray-line text-base bg-primary text-gray-900 hover:bg-[#B3B2AD]`}
                 key={item.id}
                 onClick={() => handleItemClick(item, index)}
               >
                 {item.name}
                 <div className="text-gray-400 text-xs text-end mt-3 cursor-pointer">
-                  <span onClick={() => handleRemove(index)}>删除</span>
+                  <span onClick={() => handleRemove(index)}>Delete</span>
                 </div>
               </div>
             ))}
           </div>
 
           <div
-            className="text-center font-bold bg-gray-900 h-9 leading-8 cursor-pointer"
+            className="text-center font-bold text-gray-900 bg-primary h-9 leading-8 border-solid border-0 border-t-2 border-gray-line cursor-pointer hover:bg-[#B3B2AD]"
             onClick={handleAddHistory}
           >
-            ➕
+            Start a new chat
           </div>
         </div>
       ) : (
@@ -178,7 +180,7 @@ const HistoryPanel = ({ msgList }, ref) => {
                 >
                   {item.name}
                   <div className="text-gray-400 text-xs text-end mt-3 cursor-pointer">
-                    <span onClick={() => handleRemove(index)}>删除</span>
+                    <span onClick={() => handleRemove(index)}>Delete</span>
                   </div>
                 </div>
               ))}

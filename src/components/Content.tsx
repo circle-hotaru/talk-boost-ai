@@ -6,7 +6,7 @@ import {
   useLayoutEffect,
 } from 'react'
 import { requestOpenAI } from '~/apis/openai'
-import { getSpeakToTextApi } from '~/apis/newTTS'
+import { getSpeakToTextApi } from '~/apis/azureTTS'
 import { isIOS, getLocal } from '~/utils'
 import { SettingOutlined, PlusOutlined } from '@ant-design/icons'
 import { Input, Button } from 'antd'
@@ -16,19 +16,8 @@ import { useAtom } from 'jotai'
 import { openAiCount } from '~/state'
 import { ENGLISH_TEACHER } from '~/constants'
 import HistoryPanel from './HistoryPanel'
+import UserPanel from './UserPanel'
 import { recordNowHistoryName } from '~/state/settings'
-
-const UserPanel: React.FC<{ content: string }> = ({ content }) => {
-  return (
-    <span
-      className={
-        'self-end px-3 py-2 rounded-lg bg-blue-400 text-right font-normal text-slate-50'
-      }
-    >
-      {content}
-    </span>
-  )
-}
 
 const { TextArea } = Input
 
@@ -143,8 +132,13 @@ const Content: React.FC = () => {
 
   useEffect(() => {
     let historyList = getLocal('history')
-    let currentList =
-      historyList?.find((item) => item.name === recordName)?.details || []
+    let currentList = historyList?.find((item) => item.name === recordName)
+      ?.details || [
+      {
+        role: 'system',
+        content: ENGLISH_TEACHER,
+      },
+    ]
     setMessages(currentList.filter((item) => item.role !== 'system'))
   }, [recordName])
 
@@ -163,7 +157,7 @@ const Content: React.FC = () => {
     <>
       <HistoryPanel ref={historyRef} msgList={messages} />
       <div className="w-full h-full max-w-3xl flex flex-1 flex-col items-center">
-        <div className="w-full max-w-3xl flex-1 flex flex-col gap-2 mt-4 border-solid border-2 border-gray-200 text-gray-900 py-2 px-4 rounded-lg overflow-y-auto">
+        <div className="w-full max-w-3xl flex-1 flex flex-col gap-2 border-solid border-2 border-gray-line text-gray-900 py-2 px-4 rounded-lg overflow-y-auto">
           {displayMessages.length > 0 ? (
             <>
               {displayMessages.map(({ role, content }, index) =>

@@ -22,7 +22,9 @@ specifiers:
   postcss-preset-env: ^8.3.0
   prisma: ^5.0.0
   react: 18.2.0
+  react-device-detect: ^2.2.3
   react-dom: 18.2.0
+  react-speech-recognition: ^3.10.0
   regenerator-runtime: ^0.13.11
   tailwindcss: ^3.3.1
   typescript: 5.0.3
@@ -43,7 +45,9 @@ dependencies:
   postcss-flexbugs-fixes: 5.0.2
   postcss-preset-env: 8.5.1
   react: 18.2.0
+  react-device-detect: 2.2.3_react-dom@18.2.0+react@18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-speech-recognition: 3.10.0_react@18.2.0
   regenerator-runtime: 0.13.11
   tailwindcss: 3.3.3
 
@@ -3943,6 +3947,17 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
+  /react-device-detect/2.2.3_react-dom@18.2.0+react@18.2.0:
+    resolution: {integrity: sha512-buYY3qrCnQVlIFHrC5UcUoAj7iANs/+srdkwsnNjI7anr3Tt7UY6MqNxtMLlr0tMBied0O49UZVK8XKs3ZIiPw==}
+    peerDependencies:
+      react: '>= 0.14.0'
+      react-dom: '>= 0.14.0'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      ua-parser-js: 1.0.36
+    dev: false
+
   /react-dom/18.2.0_react@18.2.0:
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
@@ -3955,6 +3970,14 @@ packages:
 
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
+
+  /react-speech-recognition/3.10.0_react@18.2.0:
+    resolution: {integrity: sha512-EVSr4Ik8l9urwdPiK2r0+ADrLyDDrjB0qBRdUWO+w2MfwEBrj6NuRmy1GD3x7BU/V6/hab0pl8Lupen0zwlJyw==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /react/18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
@@ -4440,6 +4463,10 @@ packages:
     engines: {node: '>=12.20'}
     hasBin: true
     dev: true
+
+  /ua-parser-js/1.0.36:
+    resolution: {integrity: sha512-znuyCIXzl8ciS3+y3fHJI/2OhQIXbXw9MWC/o3qwyR+RGppjZHrM27CGFSKCJXi2Kctiz537iOu2KnXs1lMQhw==}
+    dev: false
 
   /unbox-primitive/1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}

@@ -3,7 +3,8 @@ import { useAtom } from 'jotai'
 import { Button } from 'antd'
 import { openAiCount } from '~/state'
 import { PlayCircleOutlined, PauseCircleOutlined } from '@ant-design/icons'
-import * as speechSDK from 'microsoft-cognitiveservices-speech-sdk'
+import { azureSpeechSynthesize } from '~/apis/azureTTS'
+import { isSafari } from 'react-device-detect'
 
 const PlayerBtn: React.FC<{
   content: string
@@ -15,37 +16,9 @@ const PlayerBtn: React.FC<{
 
   const Icon = isPlaying ? PauseCircleOutlined : PlayCircleOutlined
 
-  const synthesizeSpeech = (text: string) => {
-    const speechConfig = speechSDK.SpeechConfig.fromSubscription(
-      process.env.AZURE_SECRET,
-      process.env.AZURE_REGION
-    )
-    const player = new speechSDK.SpeakerAudioDestination()
-    const audioConfig = speechSDK.AudioConfig.fromSpeakerOutput(player)
-    const speechSynthesizer = new speechSDK.SpeechSynthesizer(
-      speechConfig,
-      audioConfig
-    )
-    player.onAudioEnd = () => {
-      setIsPlaying(false)
-    }
-    speechSynthesizer.speakTextAsync(
-      text,
-      (result) => {
-        speechSynthesizer.close()
-      },
-      (error) => {
-        console.log(error)
-        speechSynthesizer.close()
-      }
-    )
-    return player
-  }
-
   const handlePlay = () => {
-    const player = synthesizeSpeech(content)
+    const player = azureSpeechSynthesize(content, setIsPlaying)
     setAudio(player)
-    setIsPlaying(true)
   }
 
   const handlePause = () => {
@@ -60,12 +33,16 @@ const PlayerBtn: React.FC<{
       handlePause()
     } else {
       handlePlay()
+      setIsPlaying(true)
     }
   }
 
   useEffect(() => {
     if (aiCount === index) {
       handlePlay()
+      if (!isSafari) {
+        setIsPlaying(true)
+      }
     } else {
       handlePause()
     }

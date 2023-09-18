@@ -23,7 +23,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
       <Row align="middle" justify="space-between">
         <Row align="middle" className="gap-1">
           <GithubOutlined />
-          <span>Link</span>
+          <span>Github</span>
         </Row>
         <a
           href=" https://github.com/circle-hotaru/talk-boost-ai"
