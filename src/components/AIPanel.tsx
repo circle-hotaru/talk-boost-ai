@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useAtom } from 'jotai'
-import { Button, Divider } from 'antd'
+import { Button, Divider, message } from 'antd'
 import { requestOpenAI } from '~/apis/openai'
 import { openVoiceAtom } from '~/state'
 import { TRANSLATE_SYSTEM_PROMPT, TRANSLATE_PROMPT } from '~/constants'
-import { TranslationOutlined } from '@ant-design/icons'
+import { TranslationOutlined, CopyOutlined } from '@ant-design/icons'
 import PlayerBtn from './PlayerBtn'
 
 const AIPanel: React.FC<{
@@ -15,6 +15,8 @@ const AIPanel: React.FC<{
   const [openVoice] = useAtom(openVoiceAtom)
   const [translating, setTranslating] = useState(false)
   const [translateContent, setTranslateContent] = useState(null)
+
+  const [messageApi, contextHolder] = message.useMessage()
 
   const handleTranslate = async () => {
     const translateMessages = [
@@ -40,8 +42,14 @@ const AIPanel: React.FC<{
     setTranslating(false)
   }
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(content)
+    messageApi.info('Copy successfully!')
+  }
+
   return (
     <div className="flex flex-col flex-nowrap gap-1">
+      {contextHolder}
       <div className="self-start px-4 py-2 rounded-lg bg-slate-50 text-left font-normal text-gray-900">
         <span>{content}</span>
         {translateContent && (
@@ -54,6 +62,7 @@ const AIPanel: React.FC<{
 
       <div className="flex items-center gap-1">
         {openVoice && <PlayerBtn index={index} content={content} />}
+        <Button onClick={handleCopy} size="small" icon={<CopyOutlined />} />
         <Button
           onClick={handleTranslate}
           size="small"

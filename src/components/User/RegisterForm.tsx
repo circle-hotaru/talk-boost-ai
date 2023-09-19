@@ -37,7 +37,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toLogin }) => {
 
   return (
     <>
-      {' '}
       {contextHolder}
       <Form
         labelCol={{ span: 6 }}
