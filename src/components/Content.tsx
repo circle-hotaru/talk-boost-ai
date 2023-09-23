@@ -14,10 +14,12 @@ import SettingsModal from './SettingsModal'
 import AIPanel from './AIPanel'
 import { useAtom } from 'jotai'
 import { openAiCount } from '~/state'
-import { ENGLISH_TEACHER } from '~/constants'
+import { SYSTEM_MESSAGE } from '~/constants'
 import HistoryPanel from './HistoryPanel'
 import UserPanel from './UserPanel'
+import Onboarding from './Onboarding'
 import { recordNowHistoryName } from '~/state/settings'
+import { isMobile } from 'react-device-detect'
 
 const { TextArea } = Input
 
@@ -27,7 +29,7 @@ const Content: React.FC = () => {
   const [messages, setMessages] = useState<any[]>([
     {
       role: 'system',
-      content: ENGLISH_TEACHER,
+      content: SYSTEM_MESSAGE,
     },
   ])
 
@@ -120,7 +122,7 @@ const Content: React.FC = () => {
         { role: 'assistant', content: response },
       ])
       setSending(false)
-      setAiCount(messages.filter((item) => item.role !== 'system').length)
+      setAiCount(messages.slice(2).length)
     }
   }, [response])
 
@@ -136,7 +138,7 @@ const Content: React.FC = () => {
       ?.details || [
       {
         role: 'system',
-        content: ENGLISH_TEACHER,
+        content: SYSTEM_MESSAGE,
       },
     ]
     setMessages(currentList)
@@ -151,14 +153,15 @@ const Content: React.FC = () => {
     }, 500)
   })
 
-  const displayMessages = messages.filter((item) => item.role !== 'system')
+  const displayMessages = messages.slice(2)
+  const isOnboarding = displayMessages.length === 0
 
   return (
     <>
       <HistoryPanel ref={historyRef} msgList={messages} />
       <div className="w-full h-full max-w-3xl flex flex-1 flex-col items-center">
         <div className="w-full max-w-3xl flex-1 flex flex-col gap-2 border-solid border-2 border-gray-line text-gray-900 py-2 px-4 rounded-lg overflow-y-auto">
-          {displayMessages.length > 0 ? (
+          {!isOnboarding ? (
             <>
               {displayMessages.map(({ role, content }, index) =>
                 role === 'user' ? (
@@ -175,53 +178,61 @@ const Content: React.FC = () => {
               <div ref={messagesEndRef} />
             </>
           ) : (
-            <p className="self-center">You are chatting with an AI teacher</p>
-          )}
-        </div>
-
-        <div className="w-full max-w-3xl">
-          <SettingOutlined
-            onClick={() => setIsSettingsOpen(true)}
-            className="self-start mt-4 mb-2 pl-2 text-gray-500 cursor-pointer"
-          />
-          {isIOS() && (
-            <PlusOutlined
-              onClick={addNewHistory}
-              className="self-start mt-4 mb-2 pl-2 text-gray-500 cursor-pointer"
+            <Onboarding
+              setMessages={setMessages}
+              sending={sending}
+              setSending={setSending}
             />
           )}
         </div>
 
-        <div className="w-full max-w-3xl flex flex-wrap justify-end items-center gap-2 mx-auto">
-          <TextArea
-            placeholder="Type your message here"
-            autoSize={{ minRows: 1, maxRows: 6 }}
-            value={input}
-            onChange={(event) => setInput(event.target.value)}
-            onFocus={() => setAutoScroll(true)}
-            onBlur={() => setAutoScroll(false)}
-            autoFocus
-            allowClear
-            onPressEnter={handleKeyDown}
-            className="w-full flex-none md:flex-1 "
-          />
-          <Button type="primary" onClick={handleRecord}>
-            {listening ? (
-              <div className="flex gap-1 items-center">
-                <span>Speaking</span>
-                <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
-                </span>
-              </div>
-            ) : (
-              <span>Record</span>
+        {!isOnboarding && (
+          <div className="w-full max-w-3xl">
+            <SettingOutlined
+              onClick={() => setIsSettingsOpen(true)}
+              className="self-start mt-4 mb-2 pl-2 text-gray-500 cursor-pointer"
+            />
+            {isMobile && (
+              <PlusOutlined
+                onClick={addNewHistory}
+                className="self-start mt-4 mb-2 pl-2 text-gray-500 cursor-pointer"
+              />
             )}
-          </Button>
-          <Button onClick={handleSend} disabled={sending} loading={sending}>
-            Send
-          </Button>
-        </div>
+          </div>
+        )}
+
+        {!isOnboarding && (
+          <div className="w-full max-w-3xl flex flex-wrap justify-end items-center gap-2 mx-auto">
+            <TextArea
+              placeholder="Type your message here"
+              autoSize={{ minRows: 1, maxRows: 6 }}
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+              onFocus={() => setAutoScroll(true)}
+              onBlur={() => setAutoScroll(false)}
+              autoFocus
+              allowClear
+              onPressEnter={handleKeyDown}
+              className="w-full flex-none md:flex-1 "
+            />
+            <Button type="primary" onClick={handleRecord}>
+              {listening ? (
+                <div className="flex gap-1 items-center">
+                  <span>Speaking</span>
+                  <span className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+                  </span>
+                </div>
+              ) : (
+                <span>Record</span>
+              )}
+            </Button>
+            <Button onClick={handleSend} disabled={sending} loading={sending}>
+              Send
+            </Button>
+          </div>
+        )}
       </div>
       <SettingsModal
         isOpen={isSettingsOpen}

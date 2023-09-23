@@ -6,6 +6,7 @@ import { openVoiceAtom } from '~/state'
 import { TRANSLATE_SYSTEM_PROMPT, TRANSLATE_PROMPT } from '~/constants'
 import { TranslationOutlined, CopyOutlined } from '@ant-design/icons'
 import PlayerBtn from './PlayerBtn'
+import ReactMarkdown from 'react-markdown'
 
 const AIPanel: React.FC<{
   index: number
@@ -51,11 +52,11 @@ const AIPanel: React.FC<{
     <div className="flex flex-col flex-nowrap gap-1">
       {contextHolder}
       <div className="self-start px-4 py-2 rounded-lg bg-slate-50 text-left font-normal text-gray-900">
-        <span>{content}</span>
+        <ReactMarkdown>{content}</ReactMarkdown>
         {translateContent && (
           <>
             <Divider style={{ margin: '8px 0' }} />
-            <span>{translateContent}</span>
+            <ReactMarkdown>{translateContent}</ReactMarkdown>
           </>
         )}
       </div>

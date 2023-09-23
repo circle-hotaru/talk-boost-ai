@@ -5,7 +5,7 @@ import { Drawer, Space } from 'antd'
 import { recordNowHistory, recordNowHistoryName } from '~/state/settings'
 import dayjs from 'dayjs'
 import { DoubleRightOutlined, CloseOutlined } from '@ant-design/icons'
-import { ENGLISH_TEACHER } from '~/constants'
+import { SYSTEM_MESSAGE } from '~/constants'
 
 const HistoryPanel = ({ msgList }, ref) => {
   const [historyList, setHistoryList] = useState([])
@@ -94,7 +94,7 @@ const HistoryPanel = ({ msgList }, ref) => {
           details: [
             {
               role: 'system',
-              content: ENGLISH_TEACHER,
+              content: SYSTEM_MESSAGE,
             },
           ],
         },
