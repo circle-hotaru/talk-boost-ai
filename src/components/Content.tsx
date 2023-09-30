@@ -20,10 +20,12 @@ import UserPanel from './UserPanel'
 import Onboarding from './Onboarding'
 import { recordNowHistoryName } from '~/state/settings'
 import { isMobile } from 'react-device-detect'
+import { useTranslation } from 'react-i18next'
 
 const { TextArea } = Input
 
 const Content: React.FC = () => {
+  const { t } = useTranslation()
   const [sending, setSending] = useState<boolean>(false)
   const [input, setInput] = useState<string>('')
   const [messages, setMessages] = useState<any[]>([
@@ -218,18 +220,18 @@ const Content: React.FC = () => {
             <Button type="primary" onClick={handleRecord}>
               {listening ? (
                 <div className="flex gap-1 items-center">
-                  <span>Speaking</span>
+                  <span>{t('in_chat')}</span>
                   <span className="relative flex h-3 w-3">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
                   </span>
                 </div>
               ) : (
-                <span>Record</span>
+                <span>{t('chat')}</span>
               )}
             </Button>
             <Button onClick={handleSend} disabled={sending} loading={sending}>
-              Send
+              {t('send')}
             </Button>
           </div>
         )}

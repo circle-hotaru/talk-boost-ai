@@ -1,4 +1,5 @@
 import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
+import { useTranslation } from 'react-i18next'
 import { isMobile, setLocal, getLocal, removeLocal } from '~/utils'
 import { useAtom } from 'jotai'
 import { Drawer, Space } from 'antd'
@@ -8,12 +9,20 @@ import { DoubleRightOutlined, CloseOutlined } from '@ant-design/icons'
 import { SYSTEM_MESSAGE } from '~/constants'
 
 const HistoryPanel = ({ msgList }, ref) => {
+  const { t, i18n } = useTranslation()
   const [historyList, setHistoryList] = useState([])
   const [current, setCurrent] = useState(0)
   const [recordCount, setRecordCount] = useAtom(recordNowHistory)
   const [recordName, setRecordName] = useAtom(recordNowHistoryName)
   const [recordFlags, setRecordFlags] = useState(false)
   const [open, setOpen] = useState(false)
+
+  const handleChangeLanguage = () => {
+    const currentLanguage = i18n.language
+    const newLanguage = currentLanguage === 'en' ? 'zh' : 'en'
+    i18n.changeLanguage(newLanguage)
+  }
+
   useImperativeHandle(ref, () => ({
     handleAdd: handleAddHistory,
   }))
@@ -136,7 +145,7 @@ const HistoryPanel = ({ msgList }, ref) => {
               >
                 {item.name}
                 <div className="text-gray-400 text-xs text-end mt-3 cursor-pointer">
-                  <span onClick={() => handleRemove(index)}>Delete</span>
+                  <span onClick={() => handleRemove(index)}>{t('delete')}</span>
                 </div>
               </div>
             ))}
@@ -146,7 +155,13 @@ const HistoryPanel = ({ msgList }, ref) => {
             className="text-center font-bold text-gray-900 bg-primary h-9 leading-8 border-solid border-0 border-t-2 border-gray-line cursor-pointer hover:bg-[#B3B2AD]"
             onClick={handleAddHistory}
           >
-            Start a new chat
+            {t('new_chat')}
+          </div>
+          <div
+            className="text-center font-bold text-gray-900 bg-primary h-9 leading-8 border-solid border-0 border-t-2 border-gray-line cursor-pointer hover:bg-[#B3B2AD]"
+            onClick={handleChangeLanguage}
+          >
+            {`🌐 ${t('switch_language')}`}
           </div>
         </div>
       ) : (
@@ -156,7 +171,7 @@ const HistoryPanel = ({ msgList }, ref) => {
           </div>
           <Drawer
             placement="left"
-            title="历史记录"
+            title={t('history')}
             closable={false}
             onClose={onClose}
             open={open}
@@ -180,7 +195,9 @@ const HistoryPanel = ({ msgList }, ref) => {
                 >
                   {item.name}
                   <div className="text-gray-400 text-xs text-end mt-3 cursor-pointer">
-                    <span onClick={() => handleRemove(index)}>Delete</span>
+                    <span onClick={() => handleRemove(index)}>
+                      {t('delete')}
+                    </span>
                   </div>
                 </div>
               ))}

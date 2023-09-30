@@ -3,6 +3,7 @@ import '../styles/globals.css'
 import Head from 'next/head'
 import type { AppProps } from 'next/app'
 import { Provider } from 'jotai'
+import '../src/i18n'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

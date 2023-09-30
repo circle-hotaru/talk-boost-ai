@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Form, Input, Button } from 'antd'
 import { useAtom } from 'jotai'
 import { authModalOpenAtom } from '~/state'
@@ -7,6 +8,7 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ toRegister }) => {
+  const { t } = useTranslation()
   const [open, setOpen] = useAtom(authModalOpenAtom)
 
   const login = async (values: any) => {
@@ -39,26 +41,26 @@ const LoginForm: React.FC<LoginFormProps> = ({ toRegister }) => {
       onFinish={login}
     >
       <Form.Item
-        label="用户名"
+        label={t('username')}
         name="username"
-        rules={[{ required: true, message: 'Please input your username!' }]}
+        rules={[{ required: true, message: t('error.input_username') }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
-        label="密码"
+        label={t('password')}
         name="password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
+        rules={[{ required: true, message: t('error.input_password') }]}
       >
         <Input.Password />
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
         <Button type="primary" htmlType="submit">
-          登录
+          {t('login')}
         </Button>
         <Button onClick={toRegister} className="ml-8">
-          {'去注册'}
+          {t('go_to_register')}
         </Button>
       </Form.Item>
     </Form>

@@ -1,0 +1,29 @@
+{
+  "mode": {
+    "daily_communication": "😊 Daily communication",
+    "IELTS_speaking_test": "🎓 IELTS speaking test"
+  },
+  "error": {
+    "input_username": "Please input your username!",
+    "input_email": "Please input your email!",
+    "input_password": "Please input your password!"
+  },
+  "chat": "Chat",
+  "in_chat": "In chat",
+  "send": "Send",
+  "translate": "Translate",
+  "use_voice_answer": "Use voice answer",
+  "new_chat": "New chat",
+  "register": "Register",
+  "login": "Login",
+  "username": "Username",
+  "email": "Email",
+  "password": "Password",
+  "go_to_login": "Go to login",
+  "go_to_register": "Go to register",
+  "logout": "Logout",
+  "user_exists": "User exists",
+  "history": "History",
+  "delete": "Delete",
+  "switch_language": "Switch language"
+}

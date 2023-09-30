@@ -1,0 +1,29 @@
+{
+  "mode": {
+    "daily_communication": "😊 日常交流",
+    "IELTS_speaking_test": "🎓 雅思口语测试"
+  },
+  "error": {
+    "input_username": "请输入用户名！",
+    "input_email": "请输入邮箱！",
+    "input_password": "请输入密码！"
+  },
+  "chat": "聊天",
+  "in_chat": "进行中",
+  "send": "发送",
+  "translate": "翻译",
+  "use_voice_answer": "使用语音回答",
+  "new_chat": "新的对话",
+  "register": "注册",
+  "login": "登录",
+  "username": "用户名",
+  "email": "邮箱",
+  "password": "密码",
+  "go_to_login": "去登录",
+  "go_to_register": "去注册",
+  "logout": "登出",
+  "user_exists": "用户已存在",
+  "history": "历史记录",
+  "delete": "删除",
+  "switch_language": "切换语言"
+}
