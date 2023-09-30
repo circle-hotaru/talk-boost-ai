@@ -1,4 +1,5 @@
 import { Button } from 'antd'
+import { useTranslation } from 'react-i18next'
 import { ENGLISH_TEACHER, IELTS_SPEAKING_TEST } from '~/constants'
 
 interface OnboardingProps {
@@ -12,6 +13,7 @@ const Onboarding: React.FC<OnboardingProps> = ({
   sending,
   setSending,
 }) => {
+  const { t } = useTranslation()
   const onClick = (prompt: string) => {
     setMessages((prevMessages: any[]) => [
       ...prevMessages,
@@ -32,7 +34,7 @@ const Onboarding: React.FC<OnboardingProps> = ({
           loading={sending}
           onClick={() => onClick(IELTS_SPEAKING_TEST)}
         >
-          🎓 雅思口语陪练 ➡️
+          {t('mode.IELTS_speaking_test')}
         </Button>
         <Button
           type="primary"
@@ -40,7 +42,7 @@ const Onboarding: React.FC<OnboardingProps> = ({
           loading={sending}
           onClick={() => onClick(ENGLISH_TEACHER)}
         >
-          😊 日常交流 ➡️
+          {t('mode.daily_communication')}
         </Button>
       </div>
     </div>

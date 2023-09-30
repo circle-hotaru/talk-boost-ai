@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Form, Input, Button, message } from 'antd'
 import { useAtom } from 'jotai'
 import { authModalOpenAtom } from '~/state'
@@ -7,6 +8,7 @@ interface RegisterFormProps {
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ toLogin }) => {
+  const { t } = useTranslation()
   const [open, setOpen] = useAtom(authModalOpenAtom)
   const [messageApi, contextHolder] = message.useMessage()
 
@@ -20,7 +22,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toLogin }) => {
         body: JSON.stringify(values),
       })
       if (res.status === 409) {
-        messageApi.error('用户已存在')
+        messageApi.error(t('user_exists'))
         return
       }
       if (res.status === 201) {
@@ -45,33 +47,33 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toLogin }) => {
         onFinish={register}
       >
         <Form.Item
-          label="用户名"
+          label={t('username')}
           name="username"
-          rules={[{ required: true, message: 'Please input your username!' }]}
+          rules={[{ required: true, message: t('error.input_username') }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
-          label="邮箱"
+          label={t('email')}
           name="email"
-          rules={[{ required: true, message: 'Please input your email!' }]}
+          rules={[{ required: true, message: t('error.input_email') }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
-          label="密码"
+          label={t('password')}
           name="password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
+          rules={[{ required: true, message: t('error.input_password') }]}
         >
           <Input.Password />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
           <Button type="primary" htmlType="submit">
-            注册
+            {t('register')}
           </Button>
           <Button htmlType="button" onClick={toLogin} className="ml-8">
-            {'去登录'}
+            {t('go_to_login')}
           </Button>
         </Form.Item>
       </Form>

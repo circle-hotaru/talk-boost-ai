@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next'
 import { useAtom } from 'jotai'
 import { Modal, Avatar, Button } from 'antd'
 import { userInfoModalOpenAtom } from '~/state'
 
 const UserInfo: React.FC = () => {
+  const { t } = useTranslation()
   const [open, setOpen] = useAtom(userInfoModalOpenAtom)
 
   const user = JSON.parse(window.localStorage.getItem('user') ?? '{}')
@@ -26,7 +28,7 @@ const UserInfo: React.FC = () => {
         <p className="m-0">{user?.name}</p>
         <p className="m-0">{user?.email}</p>
         <Button type="primary" onClick={handleLogout}>
-          登出
+          {t('logout')}
         </Button>
       </div>
     </Modal>

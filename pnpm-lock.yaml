@@ -13,6 +13,8 @@ specifiers:
   dayjs: ^1.11.9
   eslint: 8.37.0
   eslint-config-next: 13.2.4
+  i18next: ^23.5.1
+  i18next-browser-languagedetector: ^7.1.0
   jotai: ^2.0.4
   jsonwebtoken: ^9.0.1
   microsoft-cognitiveservices-speech-sdk: 1.32.0
@@ -24,6 +26,7 @@ specifiers:
   react: 18.2.0
   react-device-detect: ^2.2.3
   react-dom: 18.2.0
+  react-i18next: ^13.2.2
   react-markdown: ^8.0.7
   react-speech-recognition: ^3.10.0
   regenerator-runtime: ^0.13.11
@@ -38,6 +41,8 @@ dependencies:
   axios: 1.5.0
   bcrypt: 5.1.1
   dayjs: 1.11.9
+  i18next: 23.5.1
+  i18next-browser-languagedetector: 7.1.0
   jotai: 2.4.2_7b8ae5d34ed122987167c657b3c1d5cc
   jsonwebtoken: 9.0.2
   microsoft-cognitiveservices-speech-sdk: 1.32.0
@@ -48,6 +53,7 @@ dependencies:
   react: 18.2.0
   react-device-detect: 2.2.3_react-dom@18.2.0+react@18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-i18next: 13.2.2_28719d408719f1d9b2933757d273d918
   react-markdown: 8.0.7_7b8ae5d34ed122987167c657b3c1d5cc
   react-speech-recognition: 3.10.0_react@18.2.0
   regenerator-runtime: 0.13.11
@@ -2268,6 +2274,12 @@ packages:
     resolution: {integrity: sha512-nAxA0v8+vXSBDt3AnRUNjyRIQ0rD+ntpbAp4LnPkumc5M9yUbSMa4XDU9Q6etY4f1Wp4bNgvc1yjiZtsTTrSng==}
     dev: false
 
+  /html-parse-stringify/3.0.1:
+    resolution: {integrity: sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg==}
+    dependencies:
+      void-elements: 3.1.0
+    dev: false
+
   /https-proxy-agent/4.0.0:
     resolution: {integrity: sha512-zoDhWrkR3of1l9QAL8/scJZyLu8j/gBkcwcaQOZh7Gyh/+uJQzGVETdgT30akuwkpL8HTRfssqI3BZuV18teDg==}
     engines: {node: '>= 6.0.0'}
@@ -2286,6 +2298,18 @@ packages:
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /i18next-browser-languagedetector/7.1.0:
+    resolution: {integrity: sha512-cr2k7u1XJJ4HTOjM9GyOMtbOA47RtUoWRAtt52z43r3AoMs2StYKyjS3URPhzHaf+mn10hY9dZWamga5WPQjhA==}
+    dependencies:
+      '@babel/runtime': 7.22.15
+    dev: false
+
+  /i18next/23.5.1:
+    resolution: {integrity: sha512-JelYzcaCoFDaa+Ysbfz2JsGAKkrHiMG6S61+HLBUEIPaF40WMwW9hCPymlQGrP+wWawKxKPuSuD71WZscCsWHg==}
+    dependencies:
+      '@babel/runtime': 7.22.15
     dev: false
 
   /ignore/5.2.4:
@@ -4273,6 +4297,26 @@ packages:
       scheduler: 0.23.0
     dev: false
 
+  /react-i18next/13.2.2_28719d408719f1d9b2933757d273d918:
+    resolution: {integrity: sha512-+nFUkbRByFwnrfDcYqvzBuaeZb+nACHx+fAWN/pZMddWOCJH5hoc21+Sa/N/Lqi6ne6/9wC/qRGOoQhJa6IkEQ==}
+    peerDependencies:
+      i18next: '>= 23.2.3'
+      react: '>= 16.8.0'
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.22.15
+      html-parse-stringify: 3.0.1
+      i18next: 23.5.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -4957,6 +5001,11 @@ packages:
       is-buffer: 2.0.5
       unist-util-stringify-position: 3.0.3
       vfile-message: 3.1.4
+    dev: false
+
+  /void-elements/3.1.0:
+    resolution: {integrity: sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==}
+    engines: {node: '>=0.10.0'}
     dev: false
 
   /webidl-conversions/3.0.1:
