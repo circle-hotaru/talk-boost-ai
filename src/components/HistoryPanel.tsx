@@ -1,6 +1,7 @@
 import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { useTranslation } from 'react-i18next'
-import { isMobile, setLocal, getLocal, removeLocal } from '~/utils'
+import { setLocal, getLocal, removeLocal } from '~/utils'
+import { isMobile } from 'react-device-detect'
 import { useAtom } from 'jotai'
 import { Drawer, Space } from 'antd'
 import { recordNowHistory, recordNowHistoryName } from '~/state/settings'
@@ -11,7 +12,7 @@ import { SYSTEM_MESSAGE } from '~/constants'
 const HistoryPanel = ({ msgList }, ref) => {
   const { t, i18n } = useTranslation()
   const [historyList, setHistoryList] = useState([])
-  const [current, setCurrent] = useState(0)
+  const [currentChat, setCurrentChat] = useState(0)
   const [recordCount, setRecordCount] = useAtom(recordNowHistory)
   const [recordName, setRecordName] = useAtom(recordNowHistoryName)
   const [recordFlags, setRecordFlags] = useState(false)
@@ -26,22 +27,18 @@ const HistoryPanel = ({ msgList }, ref) => {
   useImperativeHandle(ref, () => ({
     handleAdd: handleAddHistory,
   }))
+
   useEffect(() => {
     if (!getLocal('history')) {
-      setLocal('history', [
+      const initHistory = [
         {
           name: `${dayjs(new Date()).format('YYYY-MM-DD')}-${recordCount}`,
           id: 1,
           details: msgList,
         },
-      ])
-      setHistoryList([
-        {
-          name: `${dayjs(new Date()).format('YYYY-MM-DD')}-${recordCount}`,
-          id: 1,
-          details: msgList,
-        },
-      ])
+      ]
+      setLocal('history', initHistory)
+      setHistoryList(initHistory)
     } else {
       let history = getLocal('history')
       if (!recordName) {
@@ -64,32 +61,32 @@ const HistoryPanel = ({ msgList }, ref) => {
   }, [historyList, recordFlags])
 
   useEffect(() => {
-    setHistoryList((current) => {
-      current.forEach((item) => {
+    setHistoryList((currentChat) => {
+      currentChat.forEach((item) => {
         if (item.name === recordName) {
           item.details = []
         }
       })
-      let newArr = current.slice()
+      let newArr = currentChat.slice()
       return newArr
     })
   }, [recordName])
 
   const handleDataRecord = (list) => {
     if (list.length > 0) {
-      setHistoryList((current) => {
-        current.forEach((item) => {
+      setHistoryList((currentChat) => {
+        currentChat.forEach((item) => {
           if (item.name === recordName) {
             item.details = list
           }
         })
-        let newArr = current.slice()
+        let newArr = currentChat.slice()
         return newArr
       })
     }
   }
   const handleItemClick = (item, index) => {
-    setCurrent(index)
+    setCurrentChat(index)
     setRecordName(() => item.name)
   }
   const handleAddHistory = () => {
@@ -111,17 +108,17 @@ const HistoryPanel = ({ msgList }, ref) => {
     })
     setRecordCount(() => recordCount + 1)
     setRecordName(`${date}-${recordCount + 1}`)
-    setCurrent(historyList.length)
+    setCurrentChat(historyList.length)
     setRecordFlags(true)
   }
-  const handleRemove = (index) => {
+  const handleDeleteChat = (index) => {
     setRecordFlags(true)
     setHistoryList((value) => {
       const copy = [...value]
       copy.splice(index, 1)
       return copy
     })
-    setCurrent(
+    setCurrentChat(
       index + 1 >= historyList.length ? historyList.length - 2 : index + 1
     )
   }
@@ -132,20 +129,25 @@ const HistoryPanel = ({ msgList }, ref) => {
   const onClose = () => {
     setOpen(false)
   }
+
   return (
     <>
-      {!isMobile() ? (
+      {!isMobile ? (
         <div className="h-full max-w-xs w-40 bg-primary flex flex-col justify-between rounded-lg overflow-auto border-solid border-2 border-gray-line mr-2">
           <div className="flex-1 overflow-y-auto rounded-lg border-solid border-0 border-gray-line">
             {historyList.map((item, index) => (
               <div
-                className={`font-bold  h-20 p-3 border-solid border-0 border-b-2 border-gray-line text-base bg-primary text-gray-900 hover:bg-[#B3B2AD]`}
+                className={`font-bold  h-20 p-3 border-solid border-0 border-b-2 border-gray-line text-base ${
+                  currentChat === index ? 'bg-[#B3B2AD]' : 'bg-primary'
+                } text-gray-900 hover:bg-[#B3B2AD]`}
                 key={item.id}
                 onClick={() => handleItemClick(item, index)}
               >
                 {item.name}
                 <div className="text-gray-400 text-xs text-end mt-3 cursor-pointer">
-                  <span onClick={() => handleRemove(index)}>{t('delete')}</span>
+                  <span onClick={() => handleDeleteChat(index)}>
+                    {t('delete')}
+                  </span>
                 </div>
               </div>
             ))}
@@ -186,7 +188,7 @@ const HistoryPanel = ({ msgList }, ref) => {
               {historyList.map((item, index) => (
                 <div
                   className={`font-bold  h-20 p-3 border-solid border-b border-t-0 border-r-0 border-l-0 border-white text-base ${
-                    current === index
+                    currentChat === index
                       ? 'bg-gray-900 text-amber-50'
                       : 'bg-gray-700 text-gray-400'
                   }`}
@@ -195,7 +197,7 @@ const HistoryPanel = ({ msgList }, ref) => {
                 >
                   {item.name}
                   <div className="text-gray-400 text-xs text-end mt-3 cursor-pointer">
-                    <span onClick={() => handleRemove(index)}>
+                    <span onClick={() => handleDeleteChat(index)}>
                       {t('delete')}
                     </span>
                   </div>
