@@ -161,8 +161,8 @@ const Content: React.FC = () => {
   return (
     <>
       <HistoryPanel ref={historyRef} msgList={messages} />
-      <div className="w-full h-full max-w-3xl flex flex-1 flex-col items-center">
-        <div className="w-full max-w-3xl flex-1 flex flex-col gap-2 border-solid border-2 border-gray-line text-gray-900 py-2 px-4 rounded-lg overflow-y-auto">
+      <div className='flex h-full w-full max-w-3xl flex-1 flex-col items-center'>
+        <div className='flex w-full max-w-3xl flex-1 flex-col gap-2 overflow-y-auto rounded-lg border-2 border-solid border-gray-line px-4 py-2 text-gray-900'>
           {!isOnboarding ? (
             <>
               {displayMessages.map(({ role, content }, index) =>
@@ -189,24 +189,24 @@ const Content: React.FC = () => {
         </div>
 
         {!isOnboarding && (
-          <div className="w-full max-w-3xl">
+          <div className='w-full max-w-3xl'>
             <SettingOutlined
               onClick={() => setIsSettingsOpen(true)}
-              className="self-start mt-4 mb-2 pl-2 text-gray-500 cursor-pointer"
+              className='mb-2 mt-4 cursor-pointer self-start pl-2 text-gray-500'
             />
             {isMobile && (
               <PlusOutlined
                 onClick={addNewHistory}
-                className="self-start mt-4 mb-2 pl-2 text-gray-500 cursor-pointer"
+                className='mb-2 mt-4 cursor-pointer self-start pl-2 text-gray-500'
               />
             )}
           </div>
         )}
 
         {!isOnboarding && (
-          <div className="w-full max-w-3xl flex flex-wrap justify-end items-center gap-2 mx-auto">
+          <div className='mx-auto flex w-full max-w-3xl flex-wrap items-center justify-end gap-2'>
             <TextArea
-              placeholder="Type your message here"
+              placeholder='Type your message here'
               autoSize={{ minRows: 1, maxRows: 6 }}
               value={input}
               onChange={(event) => setInput(event.target.value)}
@@ -215,15 +215,15 @@ const Content: React.FC = () => {
               autoFocus
               allowClear
               onPressEnter={handleKeyDown}
-              className="w-full flex-none md:flex-1 "
+              className='w-full flex-none md:flex-1 '
             />
-            <Button type="primary" onClick={handleRecord}>
+            <Button type='primary' onClick={handleRecord}>
               {listening ? (
-                <div className="flex gap-1 items-center">
+                <div className='flex items-center gap-1'>
                   <span>{t('in_chat')}</span>
-                  <span className="relative flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+                  <span className='relative flex h-3 w-3'>
+                    <span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75'></span>
+                    <span className='relative inline-flex h-3 w-3 rounded-full bg-sky-500'></span>
                   </span>
                 </div>
               ) : (

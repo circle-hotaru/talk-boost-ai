@@ -48,31 +48,31 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toLogin }) => {
       >
         <Form.Item
           label={t('username')}
-          name="username"
+          name='username'
           rules={[{ required: true, message: t('error.input_username') }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           label={t('email')}
-          name="email"
+          name='email'
           rules={[{ required: true, message: t('error.input_email') }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           label={t('password')}
-          name="password"
+          name='password'
           rules={[{ required: true, message: t('error.input_password') }]}
         >
           <Input.Password />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-          <Button type="primary" htmlType="submit">
+          <Button type='primary' htmlType='submit'>
             {t('register')}
           </Button>
-          <Button htmlType="button" onClick={toLogin} className="ml-8">
+          <Button htmlType='button' onClick={toLogin} className='ml-8'>
             {t('go_to_login')}
           </Button>
         </Form.Item>

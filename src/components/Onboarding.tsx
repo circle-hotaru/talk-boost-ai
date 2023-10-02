@@ -26,19 +26,19 @@ const Onboarding: React.FC<OnboardingProps> = ({
   }
 
   return (
-    <div className="flex flex-col justify-center items-center gap-4 h-full">
-      <h1 className="self-center">Talk Boost AI</h1>
-      <div className="flex justify-center items-center gap-2">
+    <div className='flex h-full flex-col items-center justify-center gap-4'>
+      <h1 className='self-center'>Talk Boost AI</h1>
+      <div className='flex items-center justify-center gap-2'>
         <Button
-          shape="round"
+          shape='round'
           loading={sending}
           onClick={() => onClick(IELTS_SPEAKING_TEST)}
         >
           {t('mode.IELTS_speaking_test')}
         </Button>
         <Button
-          type="primary"
-          shape="round"
+          type='primary'
+          shape='round'
           loading={sending}
           onClick={() => onClick(ENGLISH_TEACHER)}
         >

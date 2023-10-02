@@ -133,18 +133,18 @@ const HistoryPanel = ({ msgList }, ref) => {
   return (
     <>
       {!isMobile ? (
-        <div className="h-full max-w-xs w-40 bg-primary flex flex-col justify-between rounded-lg overflow-auto border-solid border-2 border-gray-line mr-2">
-          <div className="flex-1 overflow-y-auto rounded-lg border-solid border-0 border-gray-line">
+        <div className='mr-2 flex h-full w-40 max-w-xs flex-col justify-between overflow-auto rounded-lg border-2 border-solid border-gray-line bg-primary'>
+          <div className='flex-1 overflow-y-auto rounded-lg border-0 border-solid border-gray-line'>
             {historyList.map((item, index) => (
               <div
-                className={`font-bold  h-20 p-3 border-solid border-0 border-b-2 border-gray-line text-base ${
+                className={`h-20  border-0 border-b-2 border-solid border-gray-line p-3 text-base font-bold ${
                   currentChat === index ? 'bg-[#B3B2AD]' : 'bg-primary'
                 } text-gray-900 hover:bg-[#B3B2AD]`}
                 key={item.id}
                 onClick={() => handleItemClick(item, index)}
               >
                 {item.name}
-                <div className="text-gray-400 text-xs text-end mt-3 cursor-pointer">
+                <div className='mt-3 cursor-pointer text-end text-xs text-gray-400'>
                   <span onClick={() => handleDeleteChat(index)}>
                     {t('delete')}
                   </span>
@@ -154,25 +154,25 @@ const HistoryPanel = ({ msgList }, ref) => {
           </div>
 
           <div
-            className="text-center font-bold text-gray-900 bg-primary h-9 leading-8 border-solid border-0 border-t-2 border-gray-line cursor-pointer hover:bg-[#B3B2AD]"
+            className='h-9 cursor-pointer border-0 border-t-2 border-solid border-gray-line bg-primary text-center font-bold leading-8 text-gray-900 hover:bg-[#B3B2AD]'
             onClick={handleAddHistory}
           >
-            {t('new_chat')}
+            {`💬 ${t('new_chat')}`}
           </div>
           <div
-            className="text-center font-bold text-gray-900 bg-primary h-9 leading-8 border-solid border-0 border-t-2 border-gray-line cursor-pointer hover:bg-[#B3B2AD]"
+            className='h-9 cursor-pointer border-0 border-t-2 border-solid border-gray-line bg-primary text-center font-bold leading-8 text-gray-900 hover:bg-[#B3B2AD]'
             onClick={handleChangeLanguage}
           >
             {`🌐 ${t('switch_language')}`}
           </div>
         </div>
       ) : (
-        <div className=" text-gray-950 flex items-center pr-3">
+        <div className=' flex items-center pr-3 text-gray-950'>
           <div onClick={showDrawer}>
             <DoubleRightOutlined />
           </div>
           <Drawer
-            placement="left"
+            placement='left'
             title={t('history')}
             closable={false}
             onClose={onClose}
@@ -180,14 +180,14 @@ const HistoryPanel = ({ msgList }, ref) => {
             getContainer={false}
             extra={
               <Space>
-                <CloseOutlined onClick={onClose} className="text-gray-400" />
+                <CloseOutlined onClick={onClose} className='text-gray-400' />
               </Space>
             }
           >
             <div>
               {historyList.map((item, index) => (
                 <div
-                  className={`font-bold  h-20 p-3 border-solid border-b border-t-0 border-r-0 border-l-0 border-white text-base ${
+                  className={`h-20  border-b border-l-0 border-r-0 border-t-0 border-solid border-white p-3 text-base font-bold ${
                     currentChat === index
                       ? 'bg-gray-900 text-amber-50'
                       : 'bg-gray-700 text-gray-400'
@@ -196,7 +196,7 @@ const HistoryPanel = ({ msgList }, ref) => {
                   onClick={() => handleItemClick(item, index)}
                 >
                   {item.name}
-                  <div className="text-gray-400 text-xs text-end mt-3 cursor-pointer">
+                  <div className='mt-3 cursor-pointer text-end text-xs text-gray-400'>
                     <span onClick={() => handleDeleteChat(index)}>
                       {t('delete')}
                     </span>

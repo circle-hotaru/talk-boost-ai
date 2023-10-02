@@ -21,12 +21,12 @@ const Navbar: React.FC = () => {
   }
 
   return (
-    <Header className="h-14 md:h-16 w-full flex items-center px-4 md:px-8 bg-primary/60 backdrop-blur-sm z-10">
+    <Header className='z-10 flex h-14 w-full items-center bg-primary/60 px-4 backdrop-blur-sm md:h-16 md:px-8'>
       <button
         onClick={openModal}
-        className="w-10 h-10 bg-white rounded-full p-1.5 shadow-element transition-transform ease-in-out active:scale-90 outline-none"
+        className='shadow-element h-10 w-10 rounded-full bg-white p-1.5 outline-none transition-transform ease-in-out active:scale-90'
       >
-        <img src="/images/logo.png" className="w-7 h-7" alt="Open Menu" />
+        <img src='/images/logo.png' className='h-7 w-7' alt='Open Menu' />
       </button>
     </Header>
   )

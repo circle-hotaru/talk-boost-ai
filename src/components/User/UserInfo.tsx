@@ -23,11 +23,11 @@ const UserInfo: React.FC = () => {
 
   return (
     <Modal open={open} onCancel={() => setOpen(false)} footer={null}>
-      <div className="flex flex-col items-center gap-2">
-        <Avatar src={<img src={'/images/logo.png'} alt="avatar" />} />
-        <p className="m-0">{user?.name}</p>
-        <p className="m-0">{user?.email}</p>
-        <Button type="primary" onClick={handleLogout}>
+      <div className='flex flex-col items-center gap-2'>
+        <Avatar src={<img src={'/images/logo.png'} alt='avatar' />} />
+        <p className='m-0'>{user?.name}</p>
+        <p className='m-0'>{user?.email}</p>
+        <Button type='primary' onClick={handleLogout}>
           {t('logout')}
         </Button>
       </div>

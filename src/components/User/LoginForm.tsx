@@ -42,24 +42,24 @@ const LoginForm: React.FC<LoginFormProps> = ({ toRegister }) => {
     >
       <Form.Item
         label={t('username')}
-        name="username"
+        name='username'
         rules={[{ required: true, message: t('error.input_username') }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         label={t('password')}
-        name="password"
+        name='password'
         rules={[{ required: true, message: t('error.input_password') }]}
       >
         <Input.Password />
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-        <Button type="primary" htmlType="submit">
+        <Button type='primary' htmlType='submit'>
           {t('login')}
         </Button>
-        <Button onClick={toRegister} className="ml-8">
+        <Button onClick={toRegister} className='ml-8'>
           {t('go_to_register')}
         </Button>
       </Form.Item>

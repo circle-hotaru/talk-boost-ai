@@ -48,7 +48,7 @@ const PlayerBtn: React.FC<{
     }
   }, [aiCount])
 
-  return <Button onClick={handleClick} size="small" icon={<Icon />} />
+  return <Button onClick={handleClick} size='small' icon={<Icon />} />
 }
 
 export default PlayerBtn

@@ -49,9 +49,9 @@ const AIPanel: React.FC<{
   }
 
   return (
-    <div className="flex flex-col flex-nowrap gap-1">
+    <div className='flex flex-col flex-nowrap gap-1'>
       {contextHolder}
-      <div className="self-start px-4 py-2 rounded-lg bg-slate-50 text-left font-normal text-gray-900">
+      <div className='self-start rounded-lg bg-slate-50 px-4 py-2 text-left font-normal text-gray-900'>
         <ReactMarkdown>{content}</ReactMarkdown>
         {translateContent && (
           <>
@@ -61,12 +61,12 @@ const AIPanel: React.FC<{
         )}
       </div>
 
-      <div className="flex items-center gap-1">
+      <div className='flex items-center gap-1'>
         {openVoice && <PlayerBtn index={index} content={content} />}
-        <Button onClick={handleCopy} size="small" icon={<CopyOutlined />} />
+        <Button onClick={handleCopy} size='small' icon={<CopyOutlined />} />
         <Button
           onClick={handleTranslate}
-          size="small"
+          size='small'
           loading={translating}
           disabled={translating}
           icon={<TranslationOutlined />}

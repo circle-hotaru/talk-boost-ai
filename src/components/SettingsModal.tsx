@@ -14,23 +14,23 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   const [openVoice, setOpenVoice] = useAtom(openVoiceAtom)
   return (
     <Modal open={isOpen} onCancel={onClose} footer={null} closable={false}>
-      <Row align="middle" justify="space-between">
-        <Row align="middle" className="gap-1">
+      <Row align='middle' justify='space-between'>
+        <Row align='middle' className='gap-1'>
           <SoundOutlined />
           <span>{t('use_voice_answer')}</span>
         </Row>
         <Switch checked={openVoice} onClick={() => setOpenVoice(!openVoice)} />
       </Row>
       <Divider />
-      <Row align="middle" justify="space-between">
-        <Row align="middle" className="gap-1">
+      <Row align='middle' justify='space-between'>
+        <Row align='middle' className='gap-1'>
           <GithubOutlined />
           <span>Github</span>
         </Row>
         <a
-          href=" https://github.com/circle-hotaru/talk-boost-ai"
-          target="_blank"
-          rel="noopener noreferrer"
+          href=' https://github.com/circle-hotaru/talk-boost-ai'
+          target='_blank'
+          rel='noopener noreferrer'
         >
           https://github.com/circle-hotaru/talk-boost-ai
         </a>
