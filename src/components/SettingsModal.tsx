@@ -1,5 +1,5 @@
-import { Modal, Row, Divider, Switch } from 'antd'
-import { SoundOutlined, GithubOutlined } from '@ant-design/icons'
+import { Modal, Row, Switch } from 'antd'
+import { SoundOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import { useAtom } from 'jotai'
 import { openVoiceAtom } from '~/state'
@@ -20,20 +20,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
           <span>{t('use_voice_answer')}</span>
         </Row>
         <Switch checked={openVoice} onClick={() => setOpenVoice(!openVoice)} />
-      </Row>
-      <Divider />
-      <Row align='middle' justify='space-between'>
-        <Row align='middle' className='gap-1'>
-          <GithubOutlined />
-          <span>Github</span>
-        </Row>
-        <a
-          href=' https://github.com/circle-hotaru/talk-boost-ai'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          https://github.com/circle-hotaru/talk-boost-ai
-        </a>
       </Row>
     </Modal>
   )
