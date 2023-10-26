@@ -8,12 +8,11 @@ import {
 import { requestOpenAI } from '~/apis/openai'
 import { getSpeakToTextApi } from '~/apis/azureTTS'
 import { isIOS, getLocal } from '~/utils'
-import { SettingOutlined, PlusOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 import { Input, Button } from 'antd'
-import SettingsModal from './SettingsModal'
 import AIPanel from './AIPanel'
 import { useAtom } from 'jotai'
-import { openAiCount } from '~/state'
+import { openAiCount, openVoiceAtom } from '~/state'
 import { SYSTEM_MESSAGE } from '~/constants'
 import HistoryPanel from './HistoryPanel'
 import UserPanel from './UserPanel'
@@ -21,6 +20,7 @@ import Onboarding from './Onboarding'
 import { recordNowHistoryName } from '~/state/settings'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
+import { SpeakerModerateIcon, SpeakerOffIcon } from '@radix-ui/react-icons'
 
 const { TextArea } = Input
 
@@ -37,10 +37,10 @@ const Content: React.FC = () => {
 
   const [response, setResponse] = useState<string>('')
   const [recordFlag, setRecordFlag] = useState<boolean>(false)
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [listening, setListening] = useState<boolean>(false)
   const [recognizer, setRecognizer] = useState<any>({})
   const [recordName, setRecordName] = useAtom(recordNowHistoryName)
+  const [openVoice, setOpenVoice] = useAtom(openVoiceAtom)
 
   // auto scroll
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -117,6 +117,10 @@ const Content: React.FC = () => {
     historyRef.current.handleAdd()
   }
 
+  const handleOpenVoice = () => {
+    setOpenVoice(!openVoice)
+  }
+
   useEffect(() => {
     if (response.length !== 0 && response !== 'undefined') {
       setMessages((prevMessages) => [
@@ -190,9 +194,11 @@ const Content: React.FC = () => {
 
         {!isOnboarding && (
           <div className='w-full max-w-3xl'>
-            <SettingOutlined
-              onClick={() => setIsSettingsOpen(true)}
-              className='mb-2 mt-4 cursor-pointer self-start pl-2 text-gray-500'
+            <Button
+              className='m-2 mt-4 flex items-center justify-center'
+              onClick={handleOpenVoice}
+              size='small'
+              icon={openVoice ? <SpeakerModerateIcon /> : <SpeakerOffIcon />}
             />
             {isMobile && (
               <PlusOutlined
@@ -236,10 +242,6 @@ const Content: React.FC = () => {
           </div>
         )}
       </div>
-      <SettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-      />
     </>
   )
 }
