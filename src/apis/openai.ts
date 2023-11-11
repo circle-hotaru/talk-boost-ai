@@ -3,7 +3,12 @@ const proxyApiProxy = process.env.OPENAI_API_PROXY
 const apiUrl = proxyApiProxy ?? defaultApiUrl
 const apiKey = process.env.OPENAI_API_KEY
 
-export const requestOpenAI = async (messages: string[]) => {
+interface Message {
+  role: string
+  content: string
+}
+
+export const requestOpenAI = async (messages: Array<Message>) => {
   const requestOptions = {
     method: 'POST',
     headers: {
