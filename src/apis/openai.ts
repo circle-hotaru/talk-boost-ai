@@ -1,11 +1,14 @@
-const proxyAPI = 'https://api.naga.ac'
+const defaultApiUrl = 'https://api.openai.com'
+const proxyApiProxy = process.env.OPENAI_API_PROXY
+const apiUrl = proxyApiProxy ?? defaultApiUrl
+const apiKey = process.env.OPENAI_API_KEY
 
-export const requestOpenAI = async (messages: any[]) => {
+export const requestOpenAI = async (messages: string[]) => {
   const requestOptions = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.CHIMERA_API_KEY}`,
+      Authorization: !!apiKey ? `Bearer ${process.env.OPENAI_API_KEY}` : null,
     },
     body: JSON.stringify({
       model: 'gpt-3.5-turbo',
@@ -15,7 +18,7 @@ export const requestOpenAI = async (messages: any[]) => {
 
   try {
     const response = await fetch(
-      `${proxyAPI}/v1/chat/completions`,
+      `${apiUrl}/v1/chat/completions`,
       requestOptions
     )
     const data = await response.json()

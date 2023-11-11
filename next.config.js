@@ -5,7 +5,8 @@ const nextConfig = {
   env: {
     AZURE_SECRET: process.env.AZURE_SECRET,
     AZURE_REGION: process.env.AZURE_REGION,
-    CHIMERA_API_KEY: process.env.CHIMERA_API_KEY,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    OPENAI_API_PROXY: process.env.OPENAI_API_PROXY,
   },
   experimental: {
     appDir: true,
