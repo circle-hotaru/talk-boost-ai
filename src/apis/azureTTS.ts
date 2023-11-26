@@ -2,11 +2,10 @@ import {
   SpeechConfig,
   AudioConfig,
   SpeechRecognizer,
-  SpeechSynthesizer,
 } from 'microsoft-cognitiveservices-speech-sdk'
 import * as speechSDK from 'microsoft-cognitiveservices-speech-sdk'
 
-const getSpeakToTextApi = () => {
+export const getSpeakToTextApi = () => {
   const speechConfig = SpeechConfig.fromSubscription(
     process.env.AZURE_SECRET,
     process.env.AZURE_REGION
@@ -15,23 +14,17 @@ const getSpeakToTextApi = () => {
   const recognizer = new SpeechRecognizer(speechConfig, audioConfig)
   return recognizer
 }
-const getTextToSpeakApi = () => {
-  const speechConfig = SpeechConfig.fromSubscription(
-    process.env.AZURE_SECRET,
-    process.env.AZURE_REGION
-  )
-  const speechSynthesizer = new SpeechSynthesizer(speechConfig)
-  return speechSynthesizer
-}
 
-const azureSpeechSynthesize = (
+export const azureSpeechSynthesize = (
   text: string,
+  voiceId: string,
   setIsPlaying: (isPlaying) => void
 ) => {
   const speechConfig = speechSDK.SpeechConfig.fromSubscription(
     process.env.AZURE_SECRET,
     process.env.AZURE_REGION
   )
+  speechConfig.speechSynthesisVoiceName = voiceId
   const player = new speechSDK.SpeakerAudioDestination()
   const audioConfig = speechSDK.AudioConfig.fromSpeakerOutput(player)
   const speechSynthesizer = new speechSDK.SpeechSynthesizer(
@@ -53,5 +46,3 @@ const azureSpeechSynthesize = (
   )
   return player
 }
-
-export { getSpeakToTextApi, getTextToSpeakApi, azureSpeechSynthesize }

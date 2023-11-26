@@ -25,5 +25,6 @@
   "user_exists": "用户已存在",
   "history": "历史记录",
   "delete": "删除",
-  "switch_language": "切换语言"
+  "switch_language": "切换语言",
+  "choose_a_character": "选角色"
 }

@@ -1,6 +1,6 @@
 const defaultApiUrl = 'https://api.openai.com'
-const proxyApiProxy = process.env.OPENAI_API_PROXY
-const apiUrl = proxyApiProxy ?? defaultApiUrl
+const proxyApiUrl = process.env.OPENAI_API_PROXY
+const apiUrl = proxyApiUrl ?? defaultApiUrl
 const apiKey = process.env.OPENAI_API_KEY
 
 interface Message {
