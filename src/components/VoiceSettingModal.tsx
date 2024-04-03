@@ -3,10 +3,10 @@ import { useAtom } from 'jotai'
 import { voiceIdAtom, isShowVoiceSettingModal } from '~/state'
 
 const voices = {
-  Jenny: 'en-US-JennyNeural',
-  Jason: 'en-US-JasonNeural',
-  Emma: 'en-US-EmmaNeural',
-  Eric: 'en-US-EricNeural',
+  Jenny: 'en-US-AvaMultilingualNeural',
+  Jason: 'en-US-AndrewMultilingualNeural',
+  Emma: 'en-US-EmmaMultilingualNeural',
+  Eric: 'en-US-BrianMultilingualNeural',
 }
 
 const VoiceSettingModal: React.FC = () => {

@@ -13,16 +13,9 @@ const Footer: React.FC = () => {
       <span>Made with</span>
       <span style={gradientText}> Love </span>
       <span>
-        by{' '}
+        by&nbsp;
         <Link className='font-bold' href='https://github.com/circle-hotaru'>
           circlehotarux
-        </Link>{' '}
-        on{' '}
-        <Link
-          className='font-bold'
-          href='https://github.com/circle-hotaru/talk-boost-ai'
-        >
-          GitHub
         </Link>
       </span>
     </div>
