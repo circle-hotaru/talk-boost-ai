@@ -12,6 +12,9 @@ module.exports = {
         primary: '#efede7',
         'gray-line': '#dee2e6',
       },
+      fontFamily: {
+        varelaRound: ['Varela Round', 'sans-serif'],
+      },
     },
   },
   variants: {

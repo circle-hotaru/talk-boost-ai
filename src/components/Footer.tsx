@@ -9,9 +9,9 @@ const Footer: React.FC = () => {
   }
 
   return (
-    <div className='mb-4 text-center text-gray-400'>
+    <div className='font-varelaRound mb-4 text-center text-gray-400'>
       <span>Made with</span>
-      <span style={gradientText}> Love </span>
+      <span style={gradientText}>&nbsp;Love&nbsp;</span>
       <span>
         by&nbsp;
         <Link className='font-bold' href='https://github.com/circle-hotaru'>
