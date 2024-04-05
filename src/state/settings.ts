@@ -1,4 +1,5 @@
 import { atom } from 'jotai'
+import { voices } from '~/constants'
 
 export const openVoiceAtom = atom(true)
 export const openAiCount = atom(0)
@@ -6,5 +7,4 @@ export const openAiCount = atom(0)
 export const recordNowHistory = atom(0)
 
 export const recordNowHistoryName = atom('')
-export const isShowVoiceSettingModal = atom(false)
-export const voiceIdAtom = atom('en-US-JennyNeural')
+export const voiceIdAtom = atom(voices[0].id)

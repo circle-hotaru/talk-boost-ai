@@ -17,11 +17,11 @@ import { SYSTEM_MESSAGE } from '~/constants'
 import HistoryPanel from './HistoryPanel'
 import UserPanel from './UserPanel'
 import Onboarding from './Onboarding'
-import { recordNowHistoryName, isShowVoiceSettingModal } from '~/state/settings'
+import { recordNowHistoryName } from '~/state/settings'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
 import { SpeakerModerateIcon, SpeakerOffIcon } from '@radix-ui/react-icons'
-import VoiceSettingModal from './VoiceSettingModal'
+import VoiceSetting from './VoiceSetting'
 
 const { TextArea } = Input
 
@@ -42,7 +42,6 @@ const Content: React.FC = () => {
   const [recognizer, setRecognizer] = useState<any>({})
   const [recordName, setRecordName] = useAtom(recordNowHistoryName)
   const [openVoice, setOpenVoice] = useAtom(openVoiceAtom)
-  const [, setIsShowVoiceSettingModal] = useAtom(isShowVoiceSettingModal)
 
   // auto scroll
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -195,24 +194,18 @@ const Content: React.FC = () => {
         </div>
 
         {!isOnboarding && (
-          <div className='m-2 mt-4 flex w-full max-w-3xl flex-row flex-wrap justify-start gap-2 align-middle'>
+          <div className='m-2 mt-4 flex w-full max-w-3xl flex-row flex-wrap items-center justify-start gap-2'>
             <Button
               className=' flex items-center justify-center'
               onClick={handleOpenVoice}
               size='small'
               icon={openVoice ? <SpeakerModerateIcon /> : <SpeakerOffIcon />}
             />
-            <Button
-              className=' flex items-center justify-center'
-              onClick={() => setIsShowVoiceSettingModal(true)}
-              size='small'
-            >
-              {t('choose_a_character')}
-            </Button>
+            <VoiceSetting />
             {isMobile && (
               <PlusOutlined
                 onClick={addNewHistory}
-                className='cursor-pointer self-start pl-2 text-gray-500'
+                className='cursor-pointer text-gray-700'
               />
             )}
           </div>
@@ -251,7 +244,6 @@ const Content: React.FC = () => {
           </div>
         )}
       </div>
-      <VoiceSettingModal />
     </>
   )
 }
