@@ -1,6 +1,9 @@
 {
   "mode": {
-    "daily_communication": "😊 日常交流",
+    "english_communication": "😊 英语交流",
+    "french_communication": "🥐 法语交流",
+    "japanese_communication": "🌸 日语交流",
+    "spanish_communication": "🌮 西班牙语交流",
     "IELTS_speaking_test": "🎓 雅思口语测试"
   },
   "error": {

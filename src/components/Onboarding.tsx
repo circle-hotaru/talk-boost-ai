@@ -1,11 +1,17 @@
 import { Button } from 'antd'
 import { useTranslation } from 'react-i18next'
-import { ENGLISH_TEACHER, IELTS_SPEAKING_TEST } from '~/constants'
+import { IELTS_SPEAKING_TEST } from '~/constants'
 
 interface OnboardingProps {
   setMessages: Function
   sending: boolean
   setSending: Function
+}
+
+const languages = ['English', 'French', 'Japanese', 'Spanish']
+
+const getPrompt = (language: string) => {
+  return `You are an ${language} teacher, please help me practice daily ${language} communication. Find interesting topics to chat about and respond in a friendly way. Please keep your answer concise and to the point, trying to be around 2-3 sentences. If I make any mistakes, please point them out and correct them. Please communicate with me in ${language}.`
 }
 
 const Onboarding: React.FC<OnboardingProps> = ({
@@ -36,14 +42,20 @@ const Onboarding: React.FC<OnboardingProps> = ({
         >
           {t('mode.IELTS_speaking_test')}
         </Button>
-        <Button
-          type='primary'
-          shape='round'
-          loading={sending}
-          onClick={() => onClick(ENGLISH_TEACHER)}
-        >
-          {t('mode.daily_communication')}
-        </Button>
+        {languages.map((language, index) => {
+          const prompt = getPrompt(language)
+          return (
+            <Button
+              type='primary'
+              key={index}
+              shape='round'
+              loading={sending}
+              onClick={() => onClick(prompt)}
+            >
+              {t(`mode.${language.toLowerCase()}_communication`)}
+            </Button>
+          )
+        })}
       </div>
     </div>
   )

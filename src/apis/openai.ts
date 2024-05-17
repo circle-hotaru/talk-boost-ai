@@ -16,7 +16,7 @@ export const requestOpenAI = async (messages: Array<Message>) => {
       Authorization: !!apiKey ? `Bearer ${process.env.OPENAI_API_KEY}` : null,
     },
     body: JSON.stringify({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4o-2024-05-13',
       messages: messages,
     }),
   }

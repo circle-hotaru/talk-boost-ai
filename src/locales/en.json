@@ -1,6 +1,9 @@
 {
   "mode": {
-    "daily_communication": "😊 Daily communication",
+    "english_communication": "😊 English communication",
+    "french_communication": "🥐 French communication",
+    "japanese_communication": "🌸 Japanese communication",
+    "spanish_communication": "🌮 Spanish communication",
     "IELTS_speaking_test": "🎓 IELTS speaking test"
   },
   "error": {
