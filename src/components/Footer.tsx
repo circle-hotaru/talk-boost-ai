@@ -9,15 +9,29 @@ const Footer: React.FC = () => {
   }
 
   return (
-    <div className='font-varelaRound mb-4 text-center text-gray-400'>
-      <span>Made with</span>
-      <span style={gradientText}>&nbsp;Love&nbsp;</span>
-      <span>
-        by&nbsp;
-        <Link className='font-bold' href='https://github.com/circle-hotaru'>
-          circlehotarux
+    <div className='mb-4 flex flex-col items-center gap-2 text-center font-varelaRound text-gray-400'>
+      <div className='flex gap-2'>
+        <Link href='https://t.me/+mPxP1epGxgI0MmI1' target='_blank'>
+          Telegram
         </Link>
-      </span>
+        <Link href='https://ko-fi.com/incircle' target='_blank'>
+          Ko-Fi
+        </Link>
+      </div>
+      <div>
+        <span>Made with</span>
+        <span style={gradientText}>&nbsp;Love&nbsp;</span>
+        <span>
+          by&nbsp;
+          <Link
+            className='font-bold'
+            href='https://github.com/circle-hotaru'
+            target='_blank'
+          >
+            circlehotarux
+          </Link>
+        </span>
+      </div>
     </div>
   )
 }
