@@ -29,5 +29,6 @@
   "history": "History",
   "delete": "Delete",
   "switch_language": "Switch language",
-  "voice_model": "Voice model"
+  "voice_model": "Voice model",
+  "notification": "Voice service is temporarily unavailable"
 }

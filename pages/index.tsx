@@ -12,12 +12,19 @@ const DynamicNavbar = dynamic(() => import('~/components/Navbar'), {
 const DynamicUserInfo = dynamic(() => import('~/components/User/UserInfo'), {
   ssr: false,
 })
+const DynamicNotificationBar = dynamic(
+  () => import('~/components/NotificationBar'),
+  {
+    ssr: false,
+  }
+)
 
 const { Content } = Layout
 
 const Home: NextPage = () => {
   return (
     <Layout className='h-screen bg-primary'>
+      <DynamicNotificationBar />
       <DynamicNavbar />
       <Content className='flex h-screen w-full flex-1 flex-row items-center justify-center p-4 pt-0 md:pb-8'>
         <PageContent />

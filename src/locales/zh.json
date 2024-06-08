@@ -29,5 +29,6 @@
   "history": "历史记录",
   "delete": "删除",
   "switch_language": "切换语言",
-  "voice_model": "语音模型"
+  "voice_model": "语音模型",
+  "notification": "语音服务暂不可用"
 }
