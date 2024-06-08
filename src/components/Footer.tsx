@@ -4,8 +4,8 @@ const Footer: React.FC = () => {
   const gradientText = {
     fontWeight: 700,
     background: 'linear-gradient(321deg,#00d1ff,#c059ff 46.3%,#f90)',
-    '-webkit-background-clip': 'text',
-    '-webkit-text-fill-color': 'transparent',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
   }
 
   return (

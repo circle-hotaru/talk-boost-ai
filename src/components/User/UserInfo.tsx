@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { useAtom } from 'jotai'
-import { Modal, Avatar, Button } from 'antd'
+import { Modal, Button } from 'antd'
 import { userInfoModalOpenAtom } from '~/state'
+import Avvvatars from 'avvvatars-react'
 
 const UserInfo: React.FC = () => {
   const { t } = useTranslation()
@@ -24,7 +25,7 @@ const UserInfo: React.FC = () => {
   return (
     <Modal open={open} onCancel={() => setOpen(false)} footer={null}>
       <div className='flex flex-col items-center gap-2'>
-        <Avatar src={<img src={'/images/logo.png'} alt='avatar' />} />
+        <Avvvatars value={user?.name} style='shape' />
         <p className='m-0'>{user?.name}</p>
         <p className='m-0'>{user?.email}</p>
         <Button type='primary' onClick={handleLogout}>

@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Form, Input, Button, message } from 'antd'
+import Avvvatars from 'avvvatars-react'
 import { useAtom } from 'jotai'
 import { authModalOpenAtom } from '~/state'
 
@@ -9,7 +11,8 @@ interface RegisterFormProps {
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ toLogin }) => {
   const { t } = useTranslation()
-  const [open, setOpen] = useAtom(authModalOpenAtom)
+  const [username, setUsername] = useState('')
+  const [, setOpen] = useAtom(authModalOpenAtom)
   const [messageApi, contextHolder] = message.useMessage()
 
   const register = async (values: any) => {
@@ -51,7 +54,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toLogin }) => {
           name='username'
           rules={[{ required: true, message: t('error.input_username') }]}
         >
-          <Input />
+          <div className='flex items-center gap-1'>
+            <Input
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <Avvvatars value={username || 'name'} style='shape' />
+          </div>
         </Form.Item>
         <Form.Item
           label={t('email')}

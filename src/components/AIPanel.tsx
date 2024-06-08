@@ -7,6 +7,8 @@ import { TRANSLATE_SYSTEM_PROMPT, TRANSLATE_PROMPT } from '~/constants'
 import { TranslationOutlined, CopyOutlined } from '@ant-design/icons'
 import PlayerBtn from './PlayerBtn'
 import ReactMarkdown from 'react-markdown'
+import Avvvatars from 'avvvatars-react'
+import { isMobile } from 'react-device-detect'
 
 const AIPanel: React.FC<{
   index: number
@@ -49,28 +51,33 @@ const AIPanel: React.FC<{
   }
 
   return (
-    <div className='flex flex-col flex-nowrap gap-1'>
-      {contextHolder}
-      <div className='self-start rounded-lg bg-slate-50 px-4 py-2 text-left font-normal text-gray-900'>
-        <ReactMarkdown>{content}</ReactMarkdown>
-        {translateContent && (
-          <>
-            <Divider style={{ margin: '8px 0' }} />
-            <ReactMarkdown>{translateContent}</ReactMarkdown>
-          </>
-        )}
+    <div className='flex justify-start gap-1'>
+      <div>
+        <Avvvatars value={'AI'} style='shape' size={isMobile ? 24 : 32} />
       </div>
+      <div className='flex flex-col flex-nowrap gap-1'>
+        {contextHolder}
+        <div className='self-start rounded-lg bg-slate-50 px-4 py-2 text-left font-normal text-gray-900'>
+          <ReactMarkdown>{content}</ReactMarkdown>
+          {translateContent && (
+            <>
+              <Divider style={{ margin: '8px 0' }} />
+              <ReactMarkdown>{translateContent}</ReactMarkdown>
+            </>
+          )}
+        </div>
 
-      <div className='flex items-center gap-1'>
-        {openVoice && <PlayerBtn index={index} content={content} />}
-        <Button onClick={handleCopy} size='small' icon={<CopyOutlined />} />
-        <Button
-          onClick={handleTranslate}
-          size='small'
-          loading={translating}
-          disabled={translating}
-          icon={<TranslationOutlined />}
-        />
+        <div className='flex items-center gap-1'>
+          {openVoice && <PlayerBtn index={index} content={content} />}
+          <Button onClick={handleCopy} size='small' icon={<CopyOutlined />} />
+          <Button
+            onClick={handleTranslate}
+            size='small'
+            loading={translating}
+            disabled={translating}
+            icon={<TranslationOutlined />}
+          />
+        </div>
       </div>
     </div>
   )
