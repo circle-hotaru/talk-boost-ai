@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAtom } from 'jotai'
 import { Button, Divider, message } from 'antd'
-import { requestOpenAI } from '~/apis/openai'
+import { requestNagaAI } from '~/apis/nagaAI'
 import { openVoiceAtom } from '~/state'
 import { TRANSLATE_SYSTEM_PROMPT, TRANSLATE_PROMPT } from '~/constants'
 import { TranslationOutlined, CopyOutlined } from '@ant-design/icons'
@@ -35,7 +35,7 @@ const AIPanel: React.FC<{
 
     setTranslating(true)
     try {
-      const data = await requestOpenAI(translateMessages)
+      const data = await requestNagaAI(translateMessages)
       if (data) {
         setTranslateContent(data.choices[0].message.content)
       }

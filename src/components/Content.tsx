@@ -5,7 +5,7 @@ import {
   useRef,
   useLayoutEffect,
 } from 'react'
-import { requestOpenAI } from '~/apis/openai'
+import { requestNagaAI } from '~/apis/nagaAI'
 import { getSpeakToTextApi } from '~/apis/azureTTS'
 import { isIOS, getLocal } from '~/utils'
 import { PlusOutlined } from '@ant-design/icons'
@@ -105,7 +105,7 @@ const Content: React.FC = () => {
 
   const handleGenAIResponse = async (messages) => {
     try {
-      const data = await requestOpenAI(messages)
+      const data = await requestNagaAI(messages)
       if (data) {
         setResponse(data.choices[0].message.content)
       }
