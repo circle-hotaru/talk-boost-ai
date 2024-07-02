@@ -13,7 +13,7 @@ export const requestOpenAI = async (messages: Array<Message>) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: !!apiKey ? `Bearer ${process.env.OPENAI_API_KEY}` : null,
+      Authorization: !!apiKey ? `Bearer ${apiKey}` : null,
     },
     body: JSON.stringify({
       model: 'gpt-4o-2024-05-13',

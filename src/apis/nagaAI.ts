@@ -1,4 +1,6 @@
-const apiUrl = 'https://api.naga.ac'
+const defaultApiUrl = 'https://api.naga.ac'
+const proxyApiUrl = process.env.NAGAAI_API_PROXY
+const apiUrl = proxyApiUrl ?? defaultApiUrl
 const apiKey = process.env.NAGAAI_API_KEY
 
 interface Message {
@@ -12,7 +14,7 @@ export const requestNagaAI = async (messages: Array<Message>) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: !!apiKey ? `Bearer ${process.env.OPENAI_API_KEY}` : null,
+      Authorization: !!apiKey ? `Bearer ${apiKey}` : null,
     },
     body: JSON.stringify({
       model: 'claude-3.5-sonnet-20240620',
