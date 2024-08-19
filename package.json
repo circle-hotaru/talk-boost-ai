@@ -22,6 +22,7 @@
     "i18next-browser-languagedetector": "^7.1.0",
     "jotai": "^2.0.4",
     "jsonwebtoken": "^9.0.1",
+    "lucide-react": "^0.428.0",
     "microsoft-cognitiveservices-speech-sdk": "1.32.0",
     "next": "13.2.4",
     "openai": "^3.2.1",
