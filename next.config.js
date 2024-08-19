@@ -7,8 +7,6 @@ const nextConfig = {
     AZURE_REGION: process.env.AZURE_REGION,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     OPENAI_API_PROXY: process.env.OPENAI_API_PROXY,
-    NAGAAI_API_KEY: process.env.OPENAI_API_KEY,
-    NAGAAI_API_PROXY: process.env.OPENAI_API_PROXY,
   },
   experimental: {
     appDir: true,

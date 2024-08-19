@@ -105,9 +105,9 @@ const Content: React.FC = () => {
 
   const handleGenAIResponse = async (messages) => {
     try {
-      const data = await requestNagaAI(messages)
-      if (data) {
-        setResponse(data.choices[0].message.content)
+      const aiResponse = await requestNagaAI(messages)
+      if (aiResponse) {
+        setResponse(aiResponse)
       }
     } catch (error) {
       console.error(error)

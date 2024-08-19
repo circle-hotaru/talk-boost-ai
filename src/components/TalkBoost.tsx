@@ -3,7 +3,7 @@ import { Send, Plus, Menu, Trash2, Mic, MicOff, Loader } from 'lucide-react'
 import { Input } from 'antd'
 import { requestNagaAI } from '~/apis/nagaAI'
 
-type Messages = Array<{
+export type Messages = Array<{
   role: string
   content: string
 }>
@@ -28,6 +28,7 @@ const TalkBoost = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isListening, setIsListening] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const sidebarRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const recognitionRef = useRef(null)
@@ -50,6 +51,7 @@ const TalkBoost = () => {
     if (inputMessage.trim() === '') return
 
     setIsLoading(true)
+    setError(null)
     const newUserMessage = { role: 'user', content: inputMessage }
     const updatedMessages = [...messages, newUserMessage]
     setMessages(updatedMessages)
@@ -67,15 +69,16 @@ const TalkBoost = () => {
       updateChat(chatId, updatedMessages)
     }
 
-    const data = await requestNagaAI(updatedMessages)
-    if (data) {
-      const assistantMessage = {
-        role: 'assistant',
-        content: data.choices[0].message.content,
-      }
+    try {
+      const aiResponse = await requestNagaAI(updatedMessages)
+      const assistantMessage = { role: 'assistant', content: aiResponse }
       const newMessages = [...updatedMessages, assistantMessage]
       setMessages(newMessages)
       updateChat(chatId, newMessages)
+    } catch (err) {
+      setError('Failed to get AI response. Please try again.')
+      console.error('Error getting AI response:', err)
+    } finally {
       setIsLoading(false)
     }
   }
@@ -253,6 +256,13 @@ const TalkBoost = () => {
                     </div>
                   </div>
                 ))}
+              {error && (
+                <div className='mb-4 text-center'>
+                  <span className='rounded-lg bg-red-100 p-2 text-red-600'>
+                    {error}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
