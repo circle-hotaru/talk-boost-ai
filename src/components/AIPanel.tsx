@@ -35,9 +35,9 @@ const AIPanel: React.FC<{
 
     setTranslating(true)
     try {
-      const data = await requestNagaAI(translateMessages)
-      if (data) {
-        setTranslateContent(data.choices[0].message.content)
+      const aiResponse = await requestNagaAI(translateMessages)
+      if (aiResponse) {
+        setTranslateContent(aiResponse)
       }
     } catch (error) {
       console.error(error)
