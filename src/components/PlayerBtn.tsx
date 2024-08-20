@@ -18,7 +18,10 @@ const PlayerBtn: React.FC<{
   const Icon = isPlaying ? PauseCircleOutlined : PlayCircleOutlined
 
   const handlePlay = () => {
-    const player = azureSpeechSynthesize(content, voiceId, setIsPlaying)
+    const player = azureSpeechSynthesize(content, voiceId)
+    player.onAudioEnd = () => {
+      setIsPlaying(false)
+    }
     setAudio(player)
   }
 

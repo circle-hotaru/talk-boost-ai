@@ -7,8 +7,8 @@ import * as speechSDK from 'microsoft-cognitiveservices-speech-sdk'
 
 export const getSpeakToTextApi = () => {
   const speechConfig = SpeechConfig.fromSubscription(
-    process.env.AZURE_SECRET,
-    process.env.AZURE_REGION
+    process.env.NEXT_PUBLIC_AZURE_SPEECH_KEY,
+    process.env.NEXT_PUBLIC_AZURE_SPEECH_REGION
   )
   const audioConfig = AudioConfig.fromDefaultMicrophoneInput()
   const recognizer = new SpeechRecognizer(speechConfig, audioConfig)
@@ -17,12 +17,11 @@ export const getSpeakToTextApi = () => {
 
 export const azureSpeechSynthesize = (
   text: string,
-  voiceId: string,
-  setIsPlaying: (isPlaying) => void
-) => {
+  voiceId = 'en-US-AvaMultilingualNeural'
+): speechSDK.SpeakerAudioDestination => {
   const speechConfig = speechSDK.SpeechConfig.fromSubscription(
-    process.env.AZURE_SECRET,
-    process.env.AZURE_REGION
+    process.env.NEXT_PUBLIC_AZURE_SPEECH_KEY,
+    process.env.NEXT_PUBLIC_AZURE_SPEECH_REGION
   )
   speechConfig.speechSynthesisVoiceName = voiceId
   const player = new speechSDK.SpeakerAudioDestination()
@@ -31,9 +30,6 @@ export const azureSpeechSynthesize = (
     speechConfig,
     audioConfig
   )
-  player.onAudioEnd = () => {
-    setIsPlaying(false)
-  }
   speechSynthesizer.speakTextAsync(
     text,
     (result) => {

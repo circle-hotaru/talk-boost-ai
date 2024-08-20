@@ -1,7 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Send, Plus, Menu, Trash2, Mic, MicOff, Loader } from 'lucide-react'
+import {
+  Send,
+  Plus,
+  Menu,
+  Trash2,
+  Mic,
+  MicOff,
+  Loader,
+  VolumeX,
+  Volume2,
+} from 'lucide-react'
 import { Input } from 'antd'
 import { requestNagaAI } from '~/apis/nagaAI'
+import { azureSpeechSynthesize } from '~/apis/azureTTS'
+import { SpeakerAudioDestination } from 'microsoft-cognitiveservices-speech-sdk'
 
 export type Messages = Array<{
   role: string
@@ -32,6 +44,9 @@ const TalkBoost = () => {
   const sidebarRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const recognitionRef = useRef(null)
+
+  const [isSpeaking, setIsSpeaking] = useState(false)
+  const audioRef = useRef<SpeakerAudioDestination | null>(null)
 
   const createNewChat = () => {
     setCurrentChatId(null)
@@ -75,8 +90,20 @@ const TalkBoost = () => {
       const newMessages = [...updatedMessages, assistantMessage]
       setMessages(newMessages)
       updateChat(chatId, newMessages)
+
+      // 合成语音并自动播放
+      const player = azureSpeechSynthesize(aiResponse)
+      player.onAudioStart = () => {
+        setIsSpeaking(true)
+      }
+      player.onAudioEnd = () => {
+        setIsSpeaking(false)
+      }
+      audioRef.current = player
     } catch (err) {
-      setError('Failed to get AI response. Please try again.')
+      setError(
+        'Failed to get AI response or synthesize speech. Please try again.'
+      )
       console.error('Error getting AI response:', err)
     } finally {
       setIsLoading(false)
@@ -124,9 +151,27 @@ const TalkBoost = () => {
     }
   }
 
+  const toggleSpeech = () => {
+    if (audioRef.current) {
+      if (isSpeaking) {
+        audioRef.current.pause()
+        setIsSpeaking(false)
+      } else {
+        audioRef.current.resume()
+        setIsSpeaking(true)
+      }
+    }
+  }
+
   useEffect(() => {
     const storedChats = JSON.parse(localStorage.getItem('chats') || '[]')
     setChats(storedChats)
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.close()
+      }
+    }
   }, [])
 
   // 设置语音识别
@@ -253,6 +298,18 @@ const TalkBoost = () => {
                       }`}
                     >
                       {message.content}
+                      {message.role === 'assistant' && (
+                        <button
+                          onClick={toggleSpeech}
+                          className='flex h-7 w-7 items-center justify-center bg-transparent text-gray-600 hover:text-gray-800'
+                        >
+                          {isSpeaking ? (
+                            <VolumeX size={16} />
+                          ) : (
+                            <Volume2 size={16} />
+                          )}
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}
