@@ -1,6 +1,6 @@
 import { Button } from 'antd'
 import { useTranslation } from 'react-i18next'
-import { IELTS_SPEAKING_TEST } from '~/constants'
+import { IELTS_SPEAKING_TEST } from '@/constants'
 
 interface OnboardingProps {
   setMessages: Function

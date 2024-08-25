@@ -1,13 +1,13 @@
 import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { useTranslation } from 'react-i18next'
-import { setLocal, getLocal, removeLocal } from '~/utils'
+import { setLocal, getLocal, removeLocal } from '@/utils'
 import { isMobile } from 'react-device-detect'
 import { useAtom } from 'jotai'
 import { Drawer, Space } from 'antd'
-import { recordNowHistory, recordNowHistoryName } from '~/state/settings'
+import { recordNowHistory, recordNowHistoryName } from '@/state/settings'
 import dayjs from 'dayjs'
 import { DoubleRightOutlined, CloseOutlined } from '@ant-design/icons'
-import { SYSTEM_MESSAGE } from '~/constants'
+import { SYSTEM_MESSAGE } from '@/constants'
 
 const HistoryPanel = ({ msgList }, ref) => {
   const { t, i18n } = useTranslation()
@@ -133,11 +133,11 @@ const HistoryPanel = ({ msgList }, ref) => {
   return (
     <>
       {!isMobile ? (
-        <div className='mr-2 flex h-full w-40 max-w-xs flex-col justify-between overflow-auto rounded-lg border-2 border-solid border-gray-line bg-primary'>
-          <div className='flex-1 overflow-y-auto rounded-lg border-0 border-solid border-gray-line'>
+        <div className='border-gray-line mr-2 flex h-full w-40 max-w-xs flex-col justify-between overflow-auto rounded-lg border-2 border-solid bg-primary'>
+          <div className='border-gray-line flex-1 overflow-y-auto rounded-lg border-0 border-solid'>
             {historyList.map((item, index) => (
               <div
-                className={`h-20  border-0 border-b-2 border-solid border-gray-line p-3 text-base font-bold ${
+                className={`border-gray-line  h-20 border-0 border-b-2 border-solid p-3 text-base font-bold ${
                   currentChat === index ? 'bg-[#B3B2AD]' : 'bg-primary'
                 } text-gray-900 hover:bg-[#B3B2AD]`}
                 key={item.id}
@@ -154,13 +154,13 @@ const HistoryPanel = ({ msgList }, ref) => {
           </div>
 
           <div
-            className='h-9 cursor-pointer border-0 border-t-2 border-solid border-gray-line bg-primary text-center font-bold leading-8 text-gray-900 hover:bg-[#B3B2AD]'
+            className='border-gray-line h-9 cursor-pointer border-0 border-t-2 border-solid bg-primary text-center font-bold leading-8 text-gray-900 hover:bg-[#B3B2AD]'
             onClick={handleAddHistory}
           >
             {`💬 ${t('new_chat')}`}
           </div>
           <div
-            className='h-9 cursor-pointer border-0 border-t-2 border-solid border-gray-line bg-primary text-center font-bold leading-8 text-gray-900 hover:bg-[#B3B2AD]'
+            className='border-gray-line h-9 cursor-pointer border-0 border-t-2 border-solid bg-primary text-center font-bold leading-8 text-gray-900 hover:bg-[#B3B2AD]'
             onClick={handleChangeLanguage}
           >
             {`🌐 ${t('switch_language')}`}

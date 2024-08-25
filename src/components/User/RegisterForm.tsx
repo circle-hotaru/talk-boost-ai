@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Form, Input, Button, message } from 'antd'
 import Avvvatars from 'avvvatars-react'
 import { useAtom } from 'jotai'
-import { authModalOpenAtom } from '~/state'
+import { authModalOpenAtom } from '@/state'
 
 interface RegisterFormProps {
   toLogin: () => void

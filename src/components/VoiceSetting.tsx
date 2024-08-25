@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useAtom } from 'jotai'
-import { voiceIdAtom } from '~/state'
-import { voices } from '~/constants'
+import { voiceIdAtom } from '@/state'
+import { voices } from '@/constants'
 import { Select } from 'antd'
 
 const VoiceSettingModal: React.FC = () => {

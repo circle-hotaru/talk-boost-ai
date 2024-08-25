@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Form, Input, Button } from 'antd'
 import { useAtom } from 'jotai'
-import { authModalOpenAtom } from '~/state'
+import { authModalOpenAtom } from '@/state'
 
 interface LoginFormProps {
   toRegister: () => void

@@ -1,5 +1,5 @@
 import { atom } from 'jotai'
-import { voices } from '~/constants'
+import { voices } from '@/constants'
 
 export const openVoiceAtom = atom(true)
 export const openAiCount = atom(0)

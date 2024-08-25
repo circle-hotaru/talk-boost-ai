@@ -1,6 +1,6 @@
 import { Layout } from 'antd'
 import { useAtom } from 'jotai'
-import { authModalOpenAtom, userInfoModalOpenAtom } from '~/state'
+import { authModalOpenAtom, userInfoModalOpenAtom } from '@/state'
 
 const { Header } = Layout
 
