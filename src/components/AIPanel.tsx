@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useAtom } from 'jotai'
 import { Button, Divider, message } from 'antd'
-import { requestNagaAI } from '~/apis/nagaAI'
-import { openVoiceAtom } from '~/state'
-import { TRANSLATE_SYSTEM_PROMPT, TRANSLATE_PROMPT } from '~/constants'
+import { requestChatAI } from '@/apis/chatAI'
+import { openVoiceAtom } from '@/state'
+import { TRANSLATE_SYSTEM_PROMPT, TRANSLATE_PROMPT } from '@/constants'
 import { TranslationOutlined, CopyOutlined } from '@ant-design/icons'
 import PlayerBtn from './PlayerBtn'
 import ReactMarkdown from 'react-markdown'
@@ -35,7 +35,7 @@ const AIPanel: React.FC<{
 
     setTranslating(true)
     try {
-      const aiResponse = await requestNagaAI(translateMessages)
+      const aiResponse = await requestChatAI(translateMessages)
       if (aiResponse) {
         setTranslateContent(aiResponse)
       }

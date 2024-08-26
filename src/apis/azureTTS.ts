@@ -15,7 +15,7 @@ export const getSpeakToTextApi = () => {
   return recognizer
 }
 
-export const azureSpeechSynthesize = (
+export const azureSynthesizeSpeech = (
   text: string,
   voiceId = 'en-US-AvaMultilingualNeural'
 ): speechSDK.SpeakerAudioDestination => {

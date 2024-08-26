@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal } from 'antd'
 import { useAtom } from 'jotai'
-import { authModalOpenAtom } from '~/state'
+import { authModalOpenAtom } from '@/state'
 import RegisterForm from './User/RegisterForm'
 import LoginForm from './User/LoginForm'
 

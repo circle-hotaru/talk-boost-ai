@@ -5,19 +5,19 @@ import {
   useRef,
   useLayoutEffect,
 } from 'react'
-import { requestNagaAI } from '~/apis/nagaAI'
-import { getSpeakToTextApi } from '~/apis/azureTTS'
-import { isIOS, getLocal } from '~/utils'
+import { requestChatAI } from '@/apis/chatAI'
+import { getSpeakToTextApi } from '@/apis/azureTTS'
+import { isIOS, getLocal } from '@/utils'
 import { PlusOutlined } from '@ant-design/icons'
 import { Input, Button } from 'antd'
 import AIPanel from './AIPanel'
 import { useAtom } from 'jotai'
-import { openAiCount, openVoiceAtom } from '~/state'
-import { SYSTEM_MESSAGE } from '~/constants'
+import { openAiCount, openVoiceAtom } from '@/state'
+import { SYSTEM_MESSAGE } from '@/constants'
 import HistoryPanel from './HistoryPanel'
 import UserPanel from './UserPanel'
 import Onboarding from './Onboarding'
-import { recordNowHistoryName } from '~/state/settings'
+import { recordNowHistoryName } from '@/state/settings'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
 import { SpeakerModerateIcon, SpeakerOffIcon } from '@radix-ui/react-icons'
@@ -105,7 +105,7 @@ const Content: React.FC = () => {
 
   const handleGenAIResponse = async (messages) => {
     try {
-      const aiResponse = await requestNagaAI(messages)
+      const aiResponse = await requestChatAI(messages)
       if (aiResponse) {
         setResponse(aiResponse)
       }
@@ -167,7 +167,7 @@ const Content: React.FC = () => {
     <>
       <HistoryPanel ref={historyRef} msgList={messages} />
       <div className='flex h-full w-full max-w-3xl flex-1 flex-col items-center'>
-        <div className='flex w-full max-w-3xl flex-1 flex-col gap-2 overflow-y-auto rounded-lg border-2 border-solid border-gray-line px-4 py-2 text-gray-900'>
+        <div className='border-gray-line flex w-full max-w-3xl flex-1 flex-col gap-2 overflow-y-auto rounded-lg border-2 border-solid px-4 py-2 text-gray-900'>
           {!isOnboarding ? (
             <>
               {displayMessages.map(({ role, content }, index) =>

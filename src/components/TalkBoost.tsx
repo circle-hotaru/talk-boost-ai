@@ -1,24 +1,28 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { Send, Plus, Menu, Trash2, Mic, MicOff, Loader } from 'lucide-react'
 import {
-  Send,
-  Plus,
-  Menu,
-  Trash2,
-  Mic,
-  MicOff,
-  Loader,
-  VolumeX,
-  Volume2,
-} from 'lucide-react'
+  PaperPlaneIcon,
+  PlusIcon,
+  HamburgerMenuIcon,
+  TrashIcon,
+  Cross2Icon,
+  GearIcon,
+} from '@radix-ui/react-icons'
+import { Button } from '@/components/ui/button'
 import { Input } from 'antd'
-import { requestNagaAI } from '~/apis/nagaAI'
-import { azureSpeechSynthesize } from '~/apis/azureTTS'
+import { requestChatAI } from '@/apis/chatAI'
+import { azureSynthesizeSpeech } from '@/apis/azureTTS'
+import MessageItem from './MessageItem'
+import Settings from './Settings'
+import Footer from './Footer'
 import { SpeakerAudioDestination } from 'microsoft-cognitiveservices-speech-sdk'
 
-export type Messages = Array<{
+export type Message = {
   role: string
   content: string
-}>
+}
+
+export type Messages = Array<Message>
 
 type Chats = Array<{
   id: number
@@ -46,7 +50,11 @@ const TalkBoost = () => {
   const recognitionRef = useRef(null)
 
   const [isSpeaking, setIsSpeaking] = useState(false)
+  const [currentSpeakingIndex, setCurrentSpeakingIndex] = useState(null)
   const audioRef = useRef<SpeakerAudioDestination | null>(null)
+
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [isTTSEnabled, setIsTTSEnabled] = useState(true)
 
   const createNewChat = () => {
     setCurrentChatId(null)
@@ -60,6 +68,15 @@ const TalkBoost = () => {
         chat.id === chatId ? { ...chat, messages: newMessages } : chat
       )
     )
+  }
+
+  const clearSpeaking = () => {
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current = null
+      setIsSpeaking(false)
+      setCurrentSpeakingIndex(null)
+    }
   }
 
   const handleSendMessage = async () => {
@@ -85,21 +102,28 @@ const TalkBoost = () => {
     }
 
     try {
-      const aiResponse = await requestNagaAI(updatedMessages)
+      clearSpeaking()
+
+      const aiResponse = await requestChatAI(updatedMessages)
       const assistantMessage = { role: 'assistant', content: aiResponse }
       const newMessages = [...updatedMessages, assistantMessage]
+      const speakingIndex = messages.length
       setMessages(newMessages)
       updateChat(chatId, newMessages)
 
-      // 合成语音并自动播放
-      const player = azureSpeechSynthesize(aiResponse)
-      player.onAudioStart = () => {
-        setIsSpeaking(true)
+      if (isTTSEnabled) {
+        // 合成语音后会自动播放
+        const player = azureSynthesizeSpeech(aiResponse)
+        player.onAudioStart = () => {
+          setIsSpeaking(true)
+          setCurrentSpeakingIndex(speakingIndex)
+        }
+        player.onAudioEnd = () => {
+          setIsSpeaking(false)
+          setCurrentSpeakingIndex(null)
+        }
+        audioRef.current = player
       }
-      player.onAudioEnd = () => {
-        setIsSpeaking(false)
-      }
-      audioRef.current = player
     } catch (err) {
       setError(
         'Failed to get AI response or synthesize speech. Please try again.'
@@ -151,26 +175,66 @@ const TalkBoost = () => {
     }
   }
 
-  const toggleSpeech = () => {
-    if (audioRef.current) {
-      if (isSpeaking) {
-        audioRef.current.pause()
+  const toggleSpeaking = (message: string, index: number) => {
+    const isCurrentSpeakingIndex = currentSpeakingIndex === index
+
+    if (isSpeaking) {
+      if (isCurrentSpeakingIndex) {
+        audioRef.current?.pause()
         setIsSpeaking(false)
       } else {
-        audioRef.current.resume()
-        setIsSpeaking(true)
+        clearSpeaking()
+        const newPlayer = azureSynthesizeSpeech(message)
+        newPlayer.onAudioStart = () => {
+          setIsSpeaking(true)
+          setCurrentSpeakingIndex(index)
+        }
+        newPlayer.onAudioEnd = () => {
+          setIsSpeaking(false)
+          setCurrentSpeakingIndex(null)
+        }
+        audioRef.current = newPlayer
       }
+    } else {
+      if (audioRef.current && isCurrentSpeakingIndex) {
+        audioRef.current?.resume()
+      } else {
+        clearSpeaking()
+        const newPlayer = azureSynthesizeSpeech(message)
+        newPlayer.onAudioStart = () => {
+          setIsSpeaking(true)
+          setCurrentSpeakingIndex(index)
+        }
+        newPlayer.onAudioEnd = () => {
+          setIsSpeaking(false)
+          setCurrentSpeakingIndex(null)
+        }
+        audioRef.current = newPlayer
+      }
+      setIsSpeaking(true)
     }
+  }
+
+  const toggleSettings = () => {
+    setIsSettingsOpen(!isSettingsOpen)
+  }
+
+  const handleTTSToggle = (enabled: boolean) => {
+    setIsTTSEnabled(enabled)
+    localStorage.setItem('ttsEnabled', JSON.stringify(enabled))
   }
 
   useEffect(() => {
     const storedChats = JSON.parse(localStorage.getItem('chats') || '[]')
     setChats(storedChats)
 
+    const storedTTSEnabled = localStorage.getItem('ttsEnabled')
+    if (storedTTSEnabled !== null) {
+      setIsTTSEnabled(JSON.parse(storedTTSEnabled))
+    }
+
     return () => {
-      if (audioRef.current) {
-        audioRef.current.close()
-      }
+      clearSpeaking()
     }
   }, [])
 
@@ -227,7 +291,7 @@ const TalkBoost = () => {
   }, [chats])
 
   return (
-    <div className='flex h-screen bg-gray-50'>
+    <div className='flex h-screen max-h-screen bg-gray-50'>
       {/* Sidebar */}
       <aside
         ref={sidebarRef}
@@ -239,9 +303,9 @@ const TalkBoost = () => {
           onClick={createNewChat}
           className='mb-4 flex w-full items-center justify-center rounded bg-blue-500 p-2 text-white transition duration-200 hover:bg-blue-600'
         >
-          <Plus size={20} className='mr-2' /> New Conversation
+          <PlusIcon className='mr-2' /> New Conversation
         </button>
-        <div className='h-full overflow-y-auto'>
+        <div className='overflow-y-auto'>
           {chats.map((chat) => (
             <div
               key={chat.id}
@@ -259,7 +323,7 @@ const TalkBoost = () => {
                 onClick={(e) => handleDeleteChat(chat.id, e)}
                 className='flex h-7 w-7 items-center justify-center rounded bg-white text-gray-400 transition duration-200 hover:text-red-500'
               >
-                <Trash2 size={18} />
+                <TrashIcon />
               </button>
             </div>
           ))}
@@ -273,9 +337,12 @@ const TalkBoost = () => {
             className='bg-transparent text-gray-600 md:hidden'
             onClick={toggleSidebar}
           >
-            <Menu size={24} />
+            <HamburgerMenuIcon className='h-6 w-6' />
           </button>
           <h1 className='m-0 text-2xl font-bold'>Talk Boost</h1>
+          <Button variant='ghost' size='icon' onClick={toggleSettings}>
+            <GearIcon className='h-6 w-6' />
+          </Button>
         </header>
 
         <main className='flex flex-grow flex-col overflow-hidden'>
@@ -284,34 +351,14 @@ const TalkBoost = () => {
               {messages
                 .filter((message) => message.role !== 'system')
                 .map((message, index) => (
-                  <div
+                  <MessageItem
                     key={index}
-                    className={`mb-4 ${
-                      message.role === 'user' ? 'text-right' : 'text-left'
-                    }`}
-                  >
-                    <div
-                      className={`inline-block rounded-lg p-2 ${
-                        message.role === 'user'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-200 text-gray-800'
-                      }`}
-                    >
-                      {message.content}
-                      {message.role === 'assistant' && (
-                        <button
-                          onClick={toggleSpeech}
-                          className='flex h-7 w-7 items-center justify-center bg-transparent text-gray-600 hover:text-gray-800'
-                        >
-                          {isSpeaking ? (
-                            <VolumeX size={16} />
-                          ) : (
-                            <Volume2 size={16} />
-                          )}
-                        </button>
-                      )}
-                    </div>
-                  </div>
+                    message={message}
+                    index={index}
+                    isSpeaking={isSpeaking}
+                    currentSpeakingIndex={currentSpeakingIndex}
+                    toggleSpeaking={toggleSpeaking}
+                  />
                 ))}
               {error && (
                 <div className='mb-4 text-center'>
@@ -361,18 +408,16 @@ const TalkBoost = () => {
           </div>
         </main>
 
-        <footer className='bg-white py-2 text-center text-sm text-gray-600 shadow-md'>
-          Made with love by{' '}
-          <a
-            href='https://github.com/circle-hotaru'
-            target='_blank'
-            rel='noopener noreferrer'
-            className='font-medium text-blue-500'
-          >
-            incircle
-          </a>
-        </footer>
+        <Footer />
       </div>
+
+      {isSettingsOpen && (
+        <Settings
+          isTTSEnabled={isTTSEnabled}
+          onTTSToggle={handleTTSToggle}
+          onClose={toggleSettings}
+        />
+      )}
     </div>
   )
 }

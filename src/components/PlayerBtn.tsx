@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useAtom } from 'jotai'
 import { Button } from 'antd'
-import { openAiCount, voiceIdAtom } from '~/state'
+import { openAiCount, voiceIdAtom } from '@/state'
 import { PlayCircleOutlined, PauseCircleOutlined } from '@ant-design/icons'
-import { azureSpeechSynthesize } from '~/apis/azureTTS'
+import { azureSynthesizeSpeech } from '@/apis/azureTTS'
 import { isSafari } from 'react-device-detect'
 
 const PlayerBtn: React.FC<{
@@ -18,7 +18,7 @@ const PlayerBtn: React.FC<{
   const Icon = isPlaying ? PauseCircleOutlined : PlayCircleOutlined
 
   const handlePlay = () => {
-    const player = azureSpeechSynthesize(content, voiceId)
+    const player = azureSynthesizeSpeech(content, voiceId)
     player.onAudioEnd = () => {
       setIsPlaying(false)
     }

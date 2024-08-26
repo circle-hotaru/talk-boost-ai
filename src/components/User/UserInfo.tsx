@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useAtom } from 'jotai'
 import { Modal, Button } from 'antd'
-import { userInfoModalOpenAtom } from '~/state'
+import { userInfoModalOpenAtom } from '@/state'
 import Avvvatars from 'avvvatars-react'
 
 const UserInfo: React.FC = () => {
