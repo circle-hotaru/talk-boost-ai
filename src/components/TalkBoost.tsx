@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Send, Plus, Menu, Trash2, Mic, MicOff, Loader } from 'lucide-react'
+import { Send, Mic, MicOff, Loader } from 'lucide-react'
 import {
-  PaperPlaneIcon,
   PlusIcon,
   HamburgerMenuIcon,
   TrashIcon,
-  Cross2Icon,
   GearIcon,
 } from '@radix-ui/react-icons'
 import { Button } from '@/components/ui/button'
