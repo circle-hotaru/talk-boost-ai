@@ -5,7 +5,7 @@ import {
 } from 'microsoft-cognitiveservices-speech-sdk'
 import * as speechSDK from 'microsoft-cognitiveservices-speech-sdk'
 
-export const getSpeakToTextApi = () => {
+export const azureSpeechToText = () => {
   const speechConfig = SpeechConfig.fromSubscription(
     process.env.NEXT_PUBLIC_AZURE_SPEECH_KEY,
     process.env.NEXT_PUBLIC_AZURE_SPEECH_REGION
