@@ -9,7 +9,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from 'antd'
 import { requestChatAI } from '@/apis/chatAI'
-import { azureSynthesizeSpeech } from '@/apis/azureTTS'
+import { azureSynthesizeSpeech, azureSpeechToText } from '@/apis/azureTTS'
 import MessageItem from './MessageItem'
 import Settings from './Settings'
 import Footer from './Footer'
@@ -166,10 +166,28 @@ const TalkBoost = () => {
 
   const toggleListening = () => {
     if (isListening) {
-      recognitionRef.current.stop()
+      recognitionRef.current.stopContinuousRecognitionAsync()
+      setIsListening(false)
     } else {
-      recognitionRef.current.start()
-      setIsListening(true)
+      recognitionRef.current.startContinuousRecognitionAsync(
+        () => {
+          setIsListening(true)
+        },
+        (err) => {
+          recognitionRef.current.stopContinuousRecognitionAsync()
+          setIsListening(false)
+        }
+      )
+      recognitionRef.current.recognized = function (s, e) {
+        if (e.result.text !== undefined) {
+          let result = e.result.text
+          setInputMessage((pre) => pre + result)
+        }
+      }
+      recognitionRef.current.sessionStopped = (s, e) => {
+        setIsListening(false)
+        recognitionRef.current.stopContinuousRecognitionAsync()
+      }
     }
   }
 
@@ -238,32 +256,11 @@ const TalkBoost = () => {
 
   // 设置语音识别
   useEffect(() => {
-    if ('webkitSpeechRecognition' in window) {
-      // @ts-ignore
-      recognitionRef.current = new webkitSpeechRecognition()
-      recognitionRef.current.continuous = true
-      recognitionRef.current.lang = 'en-US'
-
-      recognitionRef.current.onresult = (event) => {
-        const transcript = Array.from(event.results)
-          .map((result) => result[0].transcript)
-          .join('')
-        setInputMessage(transcript)
-      }
-
-      recognitionRef.current.onerror = (event) => {
-        console.error('Speech recognition error', event.error)
-        setIsListening(false)
-      }
-
-      recognitionRef.current.onend = () => {
-        setIsListening(false)
-      }
-    }
+    recognitionRef.current = azureSpeechToText()
 
     return () => {
       if (recognitionRef.current) {
-        recognitionRef.current.stop()
+        recognitionRef.current.stopContinuousRecognitionAsync()
       }
     }
   }, [])

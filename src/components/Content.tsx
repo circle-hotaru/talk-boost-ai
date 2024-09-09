@@ -6,7 +6,7 @@ import {
   useLayoutEffect,
 } from 'react'
 import { requestChatAI } from '@/apis/chatAI'
-import { getSpeakToTextApi } from '@/apis/azureTTS'
+import { azureSpeechToText } from '@/apis/azureTTS'
 import { isIOS, getLocal } from '@/utils'
 import { PlusOutlined } from '@ant-design/icons'
 import { Input, Button } from 'antd'
@@ -58,7 +58,7 @@ const Content: React.FC = () => {
 
   useEffect(() => {
     if (Object.keys(recognizer).length === 0) {
-      let res = getSpeakToTextApi()
+      let res = azureSpeechToText()
       setRecognizer(res)
     }
   }, [recognizer])
