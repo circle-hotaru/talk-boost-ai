@@ -30,5 +30,6 @@
   "delete": "Delete",
   "switch_language": "Switch language",
   "voice_model": "Voice model",
-  "notification": "Voice service is temporarily unavailable"
+  "notification": "Voice service is temporarily unavailable",
+  "tarot_master_link": "Tarot Master"
 }
