@@ -13,7 +13,7 @@ export const requestChatAI = async (messages: Messages): Promise<string> => {
       Authorization: !!apiKey ? `Bearer ${apiKey}` : null,
     },
     body: JSON.stringify({
-      model: 'claude-3-5-sonnet-20240620',
+      model: 'claude-3-5-sonnet-20241022',
       messages: messages,
     }),
   }
