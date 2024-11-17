@@ -18,7 +18,7 @@ export const requestChatAI = async (messages: Messages): Promise<string> => {
     }),
   }
 
-  const response = await fetch(`${apiUrl}`, requestOptions)
+  const response = await fetch(`${apiUrl}/v1/chat/completions`, requestOptions)
   if (!response.ok) {
     throw new Error('Failed to get AI response')
   }
