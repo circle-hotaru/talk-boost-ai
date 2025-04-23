@@ -1,6 +1,6 @@
 import { Messages } from '@/components/TalkBoost'
 
-const defaultAPI = 'https://api.anthropic.com/v1/messages'
+const defaultAPI = 'https://api.openai.com'
 const proxyAPI = process.env.NEXT_PUBLIC_CHAT_API_PROXY
 const apiUrl = proxyAPI ?? defaultAPI
 const apiKey = process.env.NEXT_PUBLIC_CHAT_API_KEY
@@ -13,7 +13,7 @@ export const requestChatAI = async (messages: Messages): Promise<string> => {
       Authorization: !!apiKey ? `Bearer ${apiKey}` : null,
     },
     body: JSON.stringify({
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'gpt-4.1-mini',
       messages: messages,
     }),
   }
